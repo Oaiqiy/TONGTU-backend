@@ -8,6 +8,7 @@
 		<version>2.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.tongtu</groupId>
 	<artifactId>TONGTU</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -81,6 +82,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
