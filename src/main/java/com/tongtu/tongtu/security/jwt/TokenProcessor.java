@@ -18,6 +18,8 @@ import java.util.Date;
 public class TokenProcessor {
     private Long tokenTime= (long) (24 * 60 * 60 * 1000);
     private String tokenSign="token";
+    private Long registerTokenTime= (long) (30*60*1000);
+    private String registerTokenSign="register";
 
     public String createToken(String username){
         return Jwts.builder().setSubject(username)
@@ -28,12 +30,30 @@ public class TokenProcessor {
 
     public String decodeToken(String token){
         try {
-            String name = Jwts.parser().setSigningKey(tokenSign).parseClaimsJws(token).getBody().getSubject();
-            return name;
+            return Jwts.parser().setSigningKey(tokenSign).parseClaimsJws(token).getBody().getSubject();
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public String createRegisterToken(String username){
+        return Jwts.builder().setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis()+registerTokenTime))
+                .signWith(SignatureAlgorithm.HS512, registerTokenSign)
+                .compressWith(CompressionCodecs.GZIP).compact();
+    }
+
+    public String decodeRegisterToken(String token){
+        try {
+            return Jwts.parser()
+                    .setSigningKey(registerTokenSign)
+                    .parseClaimsJws(token).getBody().getSubject();
         }catch (Exception e){
             return null;
         }
 
-
     }
+
+
+
 }

@@ -1,8 +1,5 @@
 package com.tongtu.tongtu.security.jwt;
 
-/*
- *没有用
- */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +22,10 @@ import java.util.Map;
  */
 
 @Slf4j
-public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private TokenProcessor tokenProcessor;
-    public CustomAuthenticationFilter(TokenProcessor tokenProcessor){
+    public AuthenticationFilter(TokenProcessor tokenProcessor){
         this.tokenProcessor = tokenProcessor;
     }
 
@@ -42,8 +39,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             UsernamePasswordAuthenticationToken authRequest = null;
             try (InputStream is = request.getInputStream()) {
                 Map<String, String> authenticationBean = mapper.readValue(is, Map.class);
-//                log.info(authenticationBean.get("username"));
-//                log.info(authenticationBean.get("password"));
+
                 authRequest = new UsernamePasswordAuthenticationToken(
                         authenticationBean.get("username"), authenticationBean.get("password"));
             } catch (IOException e) {
@@ -62,13 +58,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     /**
-     * 登录成功后的动作
-     * @param request
-     * @param response
-     * @param chain
-     * @param authResult
-     * @throws IOException
-     * @throws ServletException
+     * 登录成功后的操作
      */
 
     @Override

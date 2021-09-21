@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * 验证token的filter，验证用户的token并给请求赋予权限
+ * 用户认证filter
  */
 
 @Slf4j
@@ -55,8 +55,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
 
         SecurityContextHolder.getContext().setAuthentication(auth);
-
-
 
         filterChain.doFilter(httpServletRequest,httpServletResponse);
 
