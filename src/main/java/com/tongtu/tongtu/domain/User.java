@@ -10,33 +10,42 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Arrays;
 import java.util.Collection;
 
 @Data
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED,force = true)
+@RequiredArgsConstructor
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
-    private String username;
-
+    private final String username;
     @JsonIgnore
-    private String password;
-
+    private final String password;
     /**
      * valid email when user sign in
      * user can user email to find back password
      */
-    private String email;
+    @Email
+    private final String email;
 
     /**
      * user's storage
      */
-    private Long maxStorage;
+
+    private Long maxStorage = (long) 1024 * 2;
     private Long usedStorage;
+
+
+    
+
+
 
 
     @Override
@@ -61,6 +70,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+
         return true;
     }
 
