@@ -9,10 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -40,15 +37,22 @@ public class User implements UserDetails {
     /**
      * user's storage
      */
+    private Date createdAt;
+    private Boolean verified = false;
+
 
     private Long maxStorage = (long) 1024 * 2;
-    private Long usedStorage;
+    private Long usedStorage = (long) 0;
+
 
 
     
 
 
-
+    @PrePersist
+    void createdAt(){
+        createdAt=new Date();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,8 +76,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-
-        return true;
+        return verified;
     }
 
 

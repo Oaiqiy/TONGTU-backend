@@ -11,8 +11,7 @@ public class RepositoryTest {
     UserRepository userRepository;
     @Test
     public void repoTest(){
-        User user = new User();
-        user.setUsername("adsfsa");
+        User user = new User("123","324","324@fdsa.com");
         userRepository.save(user);
     }
 }
