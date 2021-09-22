@@ -2,6 +2,7 @@ package com.tongtu.tongtu.security;
 
 
 import com.tongtu.tongtu.security.jwt.AuthenticationFilter;
+import com.tongtu.tongtu.security.jwt.AuthorizationFilter;
 import com.tongtu.tongtu.security.jwt.TokenProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +10,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 @Configuration
@@ -38,21 +47,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                //.antMatchers("/creat/**","/like/**","/dislike/**","/user","/delete/**","/update/**","/comment/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/**","/").access("permitAll()")
 
+                .and().formLogin().loginProcessingUrl("/default/login").successHandler(new AuthenticationSuccessHandler() {
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                        httpServletResponse.setStatus(200);
+                        httpServletResponse.setContentType("application/json;charset=UTF-8");
+                        httpServletResponse.getWriter().append("{\"code\":0,\"msg\":\"登录成功!\",\"data\":\"success\"}");
+                    }
+                })
+                .and().addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(authorizationFilter())
+
+                .csrf().disable();
     }
 
     @Bean
     AuthenticationFilter authenticationFilter() throws Exception {
         AuthenticationFilter filter = new AuthenticationFilter(tokenProcessor());
-        filter.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
-            httpServletResponse.setStatus(403);
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
-            httpServletResponse.getWriter().append("{\"code\":1,\"msg\":\"login failure!\"}");
-        });
-        filter.setFilterProcessesUrl("/login");
         filter.setAuthenticationManager(authenticationManagerBean());
         return filter;
     }
+
+    @Bean
+    public AuthorizationFilter authorizationFilter() throws Exception{
+        return new AuthorizationFilter(tokenProcessor(), authenticationManagerBean());
+    }
+
 
 
 

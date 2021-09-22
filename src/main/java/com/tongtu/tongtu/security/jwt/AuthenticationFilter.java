@@ -26,7 +26,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private TokenProcessor tokenProcessor;
     public AuthenticationFilter(TokenProcessor tokenProcessor){
+
         this.tokenProcessor = tokenProcessor;
+        this.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.setStatus(403);
+            httpServletResponse.setContentType("application/json;charset=UTF-8");
+            httpServletResponse.getWriter().append("{\"code\":1,\"msg\":\"login failure!\"}");
+        });
+        this.setFilterProcessesUrl("/login");
     }
 
     @Override
@@ -34,7 +41,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         if(request.getContentType()!=null)
         if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)||request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE) ){
-
+            log.info("asdfas");
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;
             try (InputStream is = request.getInputStream()) {
@@ -68,4 +75,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().append("{\"code\":0,\"msg\":\"login success\",\"token\":\""+  tokenProcessor.createToken(authResult.getName() )+"\"}");
     }
+
+
+
 }

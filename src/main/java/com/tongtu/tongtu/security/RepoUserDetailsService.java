@@ -22,5 +22,6 @@ public class RepoUserDetailsService implements UserDetailsService {
             return user;
         }
         throw new UsernameNotFoundException("'" + username + "' not found");
+
     }
 }
