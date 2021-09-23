@@ -3,6 +3,7 @@ package com.tongtu.tongtu.api.user;
 
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.UserRepository;
+import com.tongtu.tongtu.security.VerificationEmail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +15,23 @@ public class RegisterController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    RegisterController(UserRepository userRepository,PasswordEncoder passwordEncoder){
+    private final VerificationEmail verificationEmail;
+    RegisterController(UserRepository userRepository,PasswordEncoder passwordEncoder,VerificationEmail verificationEmail){
         this.userRepository=userRepository;
         this.passwordEncoder=passwordEncoder;
+        this.verificationEmail=verificationEmail;
     }
 
     @PostMapping("/register")
     public ResultInfo<String> register(@RequestBody RegisterForm registerForm){
         userRepository.save(registerForm.toUser(passwordEncoder));
+        try {
+            verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResultInfo<>(1,"邮件发送失败！");
+        }
+
         return new ResultInfo<>(0,"提交成功,等待用户验证。");
     }
 
