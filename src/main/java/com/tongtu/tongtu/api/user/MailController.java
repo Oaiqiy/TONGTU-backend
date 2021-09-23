@@ -18,7 +18,15 @@ public class MailController {
     }
     @GetMapping("/check")
     public String mailCheck(String token){
-        String username = tokenProcessor.decodeRegisterToken(token);
+        String username;
+        try{
+            username = tokenProcessor.decodeRegisterToken(token);
+        }catch (Exception e){
+            return "验证失败";
+        }
+        if(username==null)
+            return "验证失败";
+
         User user = userRepository.findUserByUsername(username);
         user.setVerified(true);
         userRepository.save(user);
