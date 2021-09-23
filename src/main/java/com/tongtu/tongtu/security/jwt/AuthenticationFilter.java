@@ -1,6 +1,5 @@
 package com.tongtu.tongtu.security.jwt;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-
 /**
  * 用户登录验证的类，接收json格式的数据并验证登录，如果成功返回token
  */
@@ -25,7 +23,8 @@ import java.util.Map;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private TokenProcessor tokenProcessor;
-    public AuthenticationFilter(TokenProcessor tokenProcessor){
+
+    public AuthenticationFilter(TokenProcessor tokenProcessor) {
 
         this.tokenProcessor = tokenProcessor;
         this.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
@@ -39,29 +38,31 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
-        if(request.getContentType()!=null)
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)||request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE) ){
-            log.info("asdfas");
-            ObjectMapper mapper = new ObjectMapper();
-            UsernamePasswordAuthenticationToken authRequest = null;
-            try (InputStream is = request.getInputStream()) {
-                Map<String, String> authenticationBean = mapper.readValue(is, Map.class);
+        if (request.getContentType() != null) {
+            if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+                log.info("asdfas");
+                ObjectMapper mapper = new ObjectMapper();
+                UsernamePasswordAuthenticationToken authRequest = null;
+                try (InputStream is = request.getInputStream()) {
+                    Map<String, String> authenticationBean = mapper.readValue(is, Map.class);
 
-                authRequest = new UsernamePasswordAuthenticationToken(
-                        authenticationBean.get("username"), authenticationBean.get("password"));
-            } catch (IOException e) {
-                e.printStackTrace();
-                authRequest = new UsernamePasswordAuthenticationToken(
-                        "", "");
-            } finally {
-                setDetails(request, authRequest);
-                return this.getAuthenticationManager().authenticate(authRequest);
+                    authRequest = new UsernamePasswordAuthenticationToken(authenticationBean.get("username"),
+                            authenticationBean.get("password"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    authRequest = new UsernamePasswordAuthenticationToken("", "");
+                } finally {
+                    setDetails(request, authRequest);
+                    return this.getAuthenticationManager().authenticate(authRequest);
+                }
+            } else {
+                return super.attemptAuthentication(request, response);
             }
-        } else {
-            return super.attemptAuthentication(request, response);
         }
 
-        return super.attemptAuthentication(request, response);
+        else
+            return super.attemptAuthentication(request, response);
     }
 
     /**
@@ -69,13 +70,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
      */
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authResult) throws IOException, ServletException {
         response.setStatus(200);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().append("{\"code\":0,\"msg\":\"login success\",\"token\":\""+  tokenProcessor.createToken(authResult.getName() )+"\"}");
+        response.getWriter().append("{\"code\":0,\"msg\":\"login success\",\"token\":\""
+                + tokenProcessor.createToken(authResult.getName()) + "\"}");
     }
-
-
 
 }
