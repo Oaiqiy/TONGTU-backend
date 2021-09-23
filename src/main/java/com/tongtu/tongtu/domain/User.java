@@ -16,23 +16,23 @@ import java.util.*;
 @ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC,force = true)
-@RequiredArgsConstructor
 public class User implements UserDetails {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
-    private final String username;
+    private  String username;
     @JsonIgnore
-    private final String password;
+    private  String password;
     /**
      * valid email when user sign in
      * user can user email to find back password
      */
     @Email
-    private final String email;
+    private  String email;
 
     /**
      * user's storage
@@ -46,7 +46,11 @@ public class User implements UserDetails {
 
 
 
-    
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 
 
     @PrePersist
