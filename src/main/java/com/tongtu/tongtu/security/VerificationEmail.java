@@ -11,8 +11,8 @@ import javax.mail.internet.MimeMessage;
 
 @Component
 public class VerificationEmail {
-    private JavaMailSender javaMailSender;
-    private TokenProcessor tokenProcessor;
+    private final JavaMailSender javaMailSender;
+    private final TokenProcessor tokenProcessor;
     VerificationEmail(JavaMailSender javaMailSender,TokenProcessor tokenProcessor){
         this.javaMailSender = javaMailSender;
         this.tokenProcessor = tokenProcessor;
@@ -23,10 +23,8 @@ public class VerificationEmail {
         messageHelper.setFrom("TongTu <tong_tu@outlook.com>");
         messageHelper.setTo(email);
         messageHelper.setSubject("通途注册验证邮件");
-        String token = tokenProcessor.createRegisterToken("username");
+        String token = tokenProcessor.createRegisterToken(username);
         String root = MvcUriComponentsBuilder.fromMethodName(MailController.class,"mailCheck",token).toUriString();
-        System.out.println(root);
-        System.out.println(token);
         String content = String.format("<a href=\"%s\">验证成功</a>",root);
         messageHelper.setText(content,true);
         messageHelper.setCc("tong_tu@outlook.com");

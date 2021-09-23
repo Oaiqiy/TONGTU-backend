@@ -28,7 +28,6 @@ public class RegisterController {
         try {
             verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
         }catch (Exception e){
-            e.printStackTrace();
             return new ResultInfo<>(1,"邮件发送失败！");
         }
 

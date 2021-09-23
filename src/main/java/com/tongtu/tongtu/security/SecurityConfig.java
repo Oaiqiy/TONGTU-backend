@@ -65,14 +65,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
-    @Bean
-    AuthenticationFilter authenticationFilter() throws Exception {
+
+    public AuthenticationFilter authenticationFilter() throws Exception {
         AuthenticationFilter filter = new AuthenticationFilter(tokenProcessor());
         filter.setAuthenticationManager(authenticationManagerBean());
         return filter;
     }
 
-    @Bean
+
     public AuthorizationFilter authorizationFilter() throws Exception{
         return new AuthorizationFilter(tokenProcessor(), authenticationManagerBean());
     }
