@@ -32,7 +32,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             httpServletResponse.setContentType("application/json;charset=UTF-8");
             httpServletResponse.getWriter().append("{\"code\":1,\"msg\":\"login failure!\"}");
         });
-        this.setFilterProcessesUrl("/login");
+        this.setFilterProcessesUrl("/user/login");
     }
 
     @Override
