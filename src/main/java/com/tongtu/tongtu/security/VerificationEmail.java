@@ -25,7 +25,7 @@ public class VerificationEmail {
         messageHelper.setSubject("通途注册验证邮件");
         String token = tokenProcessor.createRegisterToken(username);
         String root = MvcUriComponentsBuilder.fromMethodName(MailController.class,"mailCheck",token).toUriString();
-        String content = String.format("<a href=\"%s\">验证成功</a>",root);
+        String content = String.format("<a href=\"%s\">验证</a>",root);
         messageHelper.setText(content,true);
         messageHelper.setCc("tong_tu@outlook.com");
         javaMailSender.send(messageHelper.getMimeMessage());
