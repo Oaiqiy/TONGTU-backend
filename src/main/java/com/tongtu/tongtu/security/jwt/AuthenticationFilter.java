@@ -3,8 +3,10 @@ package com.tongtu.tongtu.security.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -27,11 +29,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     public AuthenticationFilter(TokenProcessor tokenProcessor) {
 
         this.tokenProcessor = tokenProcessor;
-        this.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
-            httpServletResponse.setStatus(403);
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
-            httpServletResponse.getWriter().append("{\"code\":1,\"msg\":\"login failure!\"}");
-        });
         this.setFilterProcessesUrl("/user/login");
     }
 
@@ -41,7 +38,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (request.getContentType() != null) {
             if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
                     || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
-                log.info("asdfas");
+                
                 ObjectMapper mapper = new ObjectMapper();
                 UsernamePasswordAuthenticationToken authRequest = null;
                 try (InputStream is = request.getInputStream()) {
@@ -49,13 +46,26 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
                     authRequest = new UsernamePasswordAuthenticationToken(authenticationBean.get("username"),
                             authenticationBean.get("password"));
+                    
                 } catch (IOException e) {
                     e.printStackTrace();
                     authRequest = new UsernamePasswordAuthenticationToken("", "");
-                } finally {
-                    setDetails(request, authRequest);
                     return this.getAuthenticationManager().authenticate(authRequest);
                 }
+                
+                try{
+                    return this.getAuthenticationManager().authenticate(authRequest);
+                }catch(DisabledException e){
+
+        
+                    response.setHeader("error", "2");
+                   
+
+                    throw new DisabledException("");
+                }
+                
+
+
             } else {
                 return super.attemptAuthentication(request, response);
             }
@@ -77,6 +87,24 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().append("{\"code\":0,\"msg\":\"login success\",\"token\":\""
                 + tokenProcessor.createToken(authResult.getName()) + "\"}");
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+
+            
+        response.setStatus(200);
+        response.setContentType("application/json;charset=UTF-8");
+        
+        if (response.getHeader("error")!= null) {
+           response.getWriter().append("{\"code\":2,\"msg\":\"Email is not enabled\"}"); 
+        }
+        else   
+            response.getWriter().append("{\"code\":1,\"msg\":\"login failure!\"}");
+
+        
+        
     }
 
 }
