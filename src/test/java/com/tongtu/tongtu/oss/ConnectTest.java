@@ -36,12 +36,13 @@ public class ConnectTest {
     public void sts(){
         AssumeRoleRequest request = new AssumeRoleRequest();
 
-        request.setRoleArn("acs:ram::1482221404522785:role/tongtu");
+        request.setRoleArn("acs:ram::1482221404522785:role/oss");
         request.setRoleSessionName("tongtu");
 
         //发起请求，并得到响应。
         try {
             AssumeRoleResponse response = client.getAcsResponse(request);
+
             System.out.println(new Gson().toJson(response));
         } catch (ServerException e) {
             e.printStackTrace();
