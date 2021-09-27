@@ -1,15 +1,10 @@
 package com.tongtu.tongtu.security.jwt;
 
-import com.aliyuncs.IAcsClient;
-import com.aliyuncs.auth.sts.AssumeRoleRequest;
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.tongtu.tongtu.api.ResultInfo;
+import com.tongtu.tongtu.oss.OssUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,14 +29,15 @@ import java.util.Map;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private TokenProcessor tokenProcessor;
-    private IAcsClient client;
+    private OssUtils ossUtils;
 
 
 
-    public AuthenticationFilter(TokenProcessor tokenProcessor,IAcsClient client) {
+
+    public AuthenticationFilter(TokenProcessor tokenProcessor, OssUtils ossUtils) {
 
         this.tokenProcessor = tokenProcessor;
-        this.client = client;
+        this.ossUtils = ossUtils;
         this.setFilterProcessesUrl("/user/login");
     }
 
@@ -95,6 +91,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
+
+
         response.setStatus(200);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -102,19 +100,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 
 
-        AssumeRoleRequest assumeRoleRequest = new AssumeRoleRequest();
-        assumeRoleRequest.setRoleArn("acs:ram::1482221404522785:role/tongtu");
-        assumeRoleRequest.setRoleSessionName("tongtu");
-        assumeRoleRequest.setDurationSeconds((long) 43200);
 
         //发起请求，并得到响应。
         AssumeRoleResponse assumeRoleResponse;
         try {
-            assumeRoleResponse = client.getAcsResponse(assumeRoleRequest);
-            System.out.println(new Gson().toJson(assumeRoleResponse));
+            assumeRoleResponse = ossUtils.getOssToken();
+
         } catch (Exception e){
             response.getWriter().append("{\"code\":3,\"msg\":\"cannot access oss\"}");
-
             return;
         }
 
@@ -128,6 +121,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         ResultInfo<Map> resultInfo = new ResultInfo<Map>(0,"login success");
         resultInfo.setData(data);
         ObjectMapper om = new ObjectMapper();
+
         response.getWriter().append(om.writeValueAsString(resultInfo));
 
     }

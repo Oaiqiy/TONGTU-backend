@@ -1,7 +1,7 @@
 package com.tongtu.tongtu.security;
 
 
-import com.aliyuncs.IAcsClient;
+import com.tongtu.tongtu.oss.OssUtils;
 import com.tongtu.tongtu.security.jwt.AuthenticationFilter;
 import com.tongtu.tongtu.security.jwt.AuthorizationFilter;
 import com.tongtu.tongtu.security.jwt.TokenProcessor;
@@ -32,10 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 此部分用来配置用户细节服务
      */
     private UserDetailsService userDetailsService;
-    private IAcsClient client;
-    SecurityConfig(UserDetailsService userDetailsService, IAcsClient iAcsClient){
+    private OssUtils ossUtils;
+    SecurityConfig(UserDetailsService userDetailsService, OssUtils ossUtils){
         this.userDetailsService=userDetailsService;
-        this.client = iAcsClient;
+        this.ossUtils = ossUtils;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     public AuthenticationFilter authenticationFilter() throws Exception {
-        AuthenticationFilter filter = new AuthenticationFilter(tokenProcessor(),client);
+        AuthenticationFilter filter = new AuthenticationFilter(tokenProcessor(), ossUtils);
         filter.setAuthenticationManager(authenticationManagerBean());
         return filter;
     }
