@@ -21,6 +21,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @Column(unique = true)
@@ -34,15 +35,22 @@ public class User implements UserDetails {
     @Email
     private  String email;
 
-    /**
-     * user's storage
-     */
+
     private Date createdAt;
     private Boolean verified = false;
 
+    /**
+     * user's storage
+     */
 
-    private Long maxStorage = (long) 1024 * 2;
-    private Long usedStorage = (long) 0;
+    private Long maxStorage = 1024 * 1024 * 2L;
+    private Long usedStorage = 0L;
+
+    private Long imageStorage = 0L;
+    private Long videoStorage = 0L;
+    private Long audioStorage = 0L;
+    private Long textStorage= 0L;
+    private Long otherStorage = 0L;
 
 
 
