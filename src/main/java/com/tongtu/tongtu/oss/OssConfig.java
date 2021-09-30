@@ -33,8 +33,5 @@ public class OssConfig {
         return new DefaultAcsClient(profile);
     }
 
-    @Bean
-    public OssUtils ossUtils(){
-        return new OssUtils(iAcsClient());
-    }
+
 }
