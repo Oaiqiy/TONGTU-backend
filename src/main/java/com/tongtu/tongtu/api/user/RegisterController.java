@@ -4,11 +4,13 @@ package com.tongtu.tongtu.api.user;
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.security.VerificationEmail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class RegisterController {
 
 
@@ -20,6 +22,7 @@ public class RegisterController {
         this.userRepository=userRepository;
         this.passwordEncoder=passwordEncoder;
         this.verificationEmail=verificationEmail;
+
     }
 
     @PostMapping("/register")
