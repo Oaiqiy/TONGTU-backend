@@ -1,6 +1,7 @@
 package com.tongtu.tongtu.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.*;
 @ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC,force = true)
+@JsonIgnoreProperties(value = {"verified","enabled","authorities","accountNonLocked","accountNonExpired","credentialsNonExpired"})
 public class User implements UserDetails {
 
 
