@@ -10,4 +10,5 @@ public class OssProperties {
     private String endpoint;
     private String accessKeyId;
     private String accessKeySecret;
+    private String roleArn;
 }

@@ -1,6 +1,9 @@
 package com.tongtu.tongtu.security.jwt;
 
+import com.aliyuncs.auth.sts.AssumeRoleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tongtu.tongtu.api.ResultInfo;
+import com.tongtu.tongtu.oss.OssUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.DisabledException;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,10 +29,15 @@ import java.util.Map;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private TokenProcessor tokenProcessor;
+    private OssUtils ossUtils;
 
-    public AuthenticationFilter(TokenProcessor tokenProcessor) {
+
+
+
+    public AuthenticationFilter(TokenProcessor tokenProcessor, OssUtils ossUtils) {
 
         this.tokenProcessor = tokenProcessor;
+        this.ossUtils = ossUtils;
         this.setFilterProcessesUrl("/user/login");
     }
 
@@ -82,11 +91,39 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
+
+
         response.setStatus(200);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().append("{\"code\":0,\"msg\":\"login success\",\"token\":\""
-                + tokenProcessor.createToken(authResult.getName()) + "\"}");
+
+
+
+
+
+        //发起请求，并得到响应。
+        AssumeRoleResponse assumeRoleResponse;
+        try {
+            assumeRoleResponse = ossUtils.getOssToken();
+
+        } catch (Exception e){
+            response.getWriter().append("{\"code\":3,\"msg\":\"cannot access oss\"}");
+            return;
+        }
+
+
+        Map<String,Object> data = new HashMap<>();
+
+        data.put("token",tokenProcessor.createToken(authResult.getName()));
+        data.put("sts",assumeRoleResponse.getCredentials());
+
+
+        ResultInfo<Map> resultInfo = new ResultInfo<Map>(0,"login success");
+        resultInfo.setData(data);
+        ObjectMapper om = new ObjectMapper();
+
+        response.getWriter().append(om.writeValueAsString(resultInfo));
+
     }
 
     @Override
@@ -98,7 +135,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json;charset=UTF-8");
         
         if (response.getHeader("error")!= null) {
-           response.getWriter().append("{\"code\":2,\"msg\":\"Email is not enabled\"}"); 
+           response.getWriter().append("{\"code\":2,\"msg\":\"Email is not enabled\"}");
+
+
+
         }
         else   
             response.getWriter().append("{\"code\":1,\"msg\":\"login failure!\"}");
