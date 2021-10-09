@@ -16,9 +16,6 @@ public class UserController {
     private UserRepository userRepository;
 
 
-
-
-
     @GetMapping
     public ResultInfo<User> userInfo(){
         User user =  userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());

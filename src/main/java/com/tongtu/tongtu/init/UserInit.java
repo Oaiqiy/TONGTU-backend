@@ -30,8 +30,15 @@ public class UserInit {
                 userRepository.save(mhl);
                 mhl=userRepository.findUserByUsername("mhl");
                 mhl.setVerified(true);
-
                 userRepository.save(mhl);
+
+                User horace = new User("horace",passwordEncoder.encode("123456"),"1070236799@qq.com");
+                userRepository.save(horace);
+                horace=userRepository.findUserByUsername("horace");
+                horace.setVerified(true);
+                userRepository.save(horace);
+
+
 
             }
         };
