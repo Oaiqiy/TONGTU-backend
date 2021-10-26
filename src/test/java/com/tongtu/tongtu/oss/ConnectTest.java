@@ -1,8 +1,10 @@
 package com.tongtu.tongtu.oss;
 
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.model.Callback;
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
+import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.auth.sts.AssumeRoleRequest;
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
@@ -12,6 +14,8 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.File;
 
 @SpringBootTest
 public class ConnectTest {
@@ -51,5 +55,21 @@ public class ConnectTest {
             System.out.println("ErrMsg:" + e.getErrMsg());
             System.out.println("RequestId:" + e.getRequestId());
         }
+    }
+
+    @Test
+    public void ossCallback(){
+        PutObjectRequest putObjectRequest = new PutObjectRequest("examplesbucket","examplesbucket/误差求根.pdf",new File("F:\\QQDownload\\误差求根.pdf"));
+        Callback callback = new Callback();
+        callback.setCallbackUrl("http://api.tongtu.xyz/oss/callback");
+        callback.setCallbackHost("oss-cn-beijing.aliyuncs.com");
+        callback.setCalbackBodyType(Callback.CalbackBodyType.JSON);
+        callback.setCallbackBody("{\"mimeType\":\"text\",\"size\":1024}");
+
+        putObjectRequest.setCallback(callback);
+
+        oss.putObject(putObjectRequest);
+
+
     }
 }

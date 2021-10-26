@@ -17,6 +17,7 @@ public class OssUtils {
     }
 
     public AssumeRoleResponse getOssToken() throws Exception{
+
         AssumeRoleRequest assumeRoleRequest = new AssumeRoleRequest();
         assumeRoleRequest.setRoleArn("acs:ram::1482221404522785:role/tongtu");
         assumeRoleRequest.setRoleSessionName("tongtu");
