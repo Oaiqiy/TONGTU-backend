@@ -53,7 +53,8 @@ public class User implements UserDetails {
     private Long textStorage= 0L;
     private Long otherStorage = 0L;
 
-
+    @OneToMany
+    private List<Device> devices;
 
     public User(String username, String password, String email) {
         this.username = username;
