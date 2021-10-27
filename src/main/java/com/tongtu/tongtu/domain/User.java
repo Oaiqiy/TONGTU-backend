@@ -10,11 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.io.File;
 import java.util.*;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC,force = true)
 @JsonIgnoreProperties(value = {"verified","enabled","authorities","accountNonLocked","accountNonExpired","credentialsNonExpired"})
@@ -62,16 +62,38 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    public enum FileType{
+        IMAGE,VIDEO,AUDIO,TEXT,OTHER
+    }
 
     @PrePersist
     void createdAt(){
         createdAt=new Date();
     }
 
+    public void uploadFile(Long size, FileType fileType){
+        usedStorage+=size;
+        switch (fileType){
+            case IMAGE:
+                imageStorage+=size;
+            case VIDEO:
+                videoStorage+=size;
+            case AUDIO:
+                audioStorage+=size;
+            case TEXT:
+                textStorage+=size;
+            case OTHER:
+                otherStorage+=size;
+        }
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {

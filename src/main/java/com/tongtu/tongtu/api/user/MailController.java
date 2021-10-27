@@ -30,6 +30,7 @@ public class MailController {
         User user = userRepository.findUserByUsername(username);
         user.setVerified(true);
         userRepository.save(user);
+
         return "验证成功";
     }
 }
