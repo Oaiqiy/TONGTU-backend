@@ -1,21 +1,16 @@
 package com.tongtu.tongtu.init;
 
-import java.util.Properties;
+
 
 import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.mail.internet.MimeMessage;
+
 
 @Slf4j
 @Component
