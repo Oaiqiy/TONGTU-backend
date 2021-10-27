@@ -18,8 +18,12 @@ public class FileInfo {
     private String object;
     private Long size;
     private FileType fileType;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    private Device device;
 
 
 

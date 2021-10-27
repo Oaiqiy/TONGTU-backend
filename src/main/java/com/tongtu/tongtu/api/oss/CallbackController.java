@@ -2,6 +2,7 @@ package com.tongtu.tongtu.api.oss;
 
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.UserRepository;
+import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class CallbackController {
 
 
         User user= userRepository.findUserById(callbackForm.getId());
-        user.uploadFile(callbackForm.getSize(), User.FileType.OTHER);
+        user.uploadFile(callbackForm.getSize(), FileInfo.FileType.OTHER);
         userRepository.save(user);
 
         test.put("usedStorage",user.getUsedStorage().toString());
