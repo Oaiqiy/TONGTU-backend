@@ -35,8 +35,6 @@ public class User implements UserDetails {
      */
     @Email
     private  String email;
-
-
     private Date createdAt;
     private Boolean verified = false;
 
@@ -53,13 +51,12 @@ public class User implements UserDetails {
     private Long textStorage= 0L;
     private Long otherStorage = 0L;
 
+    private Long recycleStorage = 1024* 1024L;
+    private Long usedRecycleStorage = 0L;
 
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
+
+
 
 
 
@@ -84,6 +81,15 @@ public class User implements UserDetails {
         }
     }
 
+    public User(Long id){
+        this.id = id;
+    }
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

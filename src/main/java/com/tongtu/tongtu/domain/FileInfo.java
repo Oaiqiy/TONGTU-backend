@@ -1,6 +1,5 @@
 package com.tongtu.tongtu.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,8 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 public class FileInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +17,20 @@ public class FileInfo {
     private Long size;
     private FileType fileType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,targetEntity = User.class)
     private User user;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     private Device device;
+
+    public FileInfo(String bucket, String object, Long size, FileType fileType, User user, Device device) {
+        this.bucket = bucket;
+        this.object = object;
+        this.size = size;
+        this.fileType = fileType;
+        this.user = user;
+        this.device = device;
+    }
 
 
 

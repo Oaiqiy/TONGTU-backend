@@ -17,7 +17,7 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 
-    private final String name;
+    private String name;
     private String alias;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -37,4 +37,10 @@ public class Device {
     public int hashCode() {
         return 1273429004;
     }
+
+    public Device(Long id){
+        this.id = id;
+    }
+
+
 }

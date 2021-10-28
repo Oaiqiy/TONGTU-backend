@@ -69,7 +69,7 @@ public class ConnectTest {
 
         PutObjectRequest putObjectRequest = new PutObjectRequest("examplesbucket","误差求根.pdf",new File("F:\\QQDownload\\误差求根.pdf"));
         Callback callback = new Callback();
-        System.out.println(MvcUriComponentsBuilder.fromMethodName(CallbackController.class, "ossCallback", new CallbackForm("f",1l,3l,"f","f")).toUriString());
+        //System.out.println(MvcUriComponentsBuilder.fromMethodName(CallbackController.class, "ossCallback", new CallbackForm("f",1l,3l,"f","f")).toUriString());
         callback.setCallbackUrl("http://api.tongtu.xyz/oss/callback");
         //callback.setCallbackHost("oss-cn-beijing.aliyuncs.com");
         callback.setCalbackBodyType(Callback.CalbackBodyType.JSON);
