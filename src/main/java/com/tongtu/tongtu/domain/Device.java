@@ -10,7 +10,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class Device {
     @Id
@@ -20,7 +19,7 @@ public class Device {
     private String name;
     private String alias;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.DETACH)
     private User user;
 
 

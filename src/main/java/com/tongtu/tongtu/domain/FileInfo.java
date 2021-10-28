@@ -17,7 +17,7 @@ public class FileInfo {
     private Long size;
     private FileType fileType;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = User.class)
+    @ManyToOne(cascade = CascadeType.DETACH,targetEntity = User.class)
     private User user;
 
     @ManyToOne(cascade = CascadeType.DETACH)
