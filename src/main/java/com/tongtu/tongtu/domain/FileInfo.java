@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,12 +17,19 @@ public class FileInfo {
     private String object;
     private Long size;
     private FileType fileType;
+    private Date createdAt;
+    private Boolean deleted = false;
 
     @ManyToOne(cascade = CascadeType.DETACH,targetEntity = User.class)
     private User user;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     private Device device;
+
+    @PrePersist
+    public void createdAt(){
+        createdAt = new Date();
+    }
 
     public FileInfo(String bucket, String object, Long size, FileType fileType, User user, Device device) {
         this.bucket = bucket;
