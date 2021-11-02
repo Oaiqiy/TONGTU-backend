@@ -2,7 +2,9 @@ package com.tongtu.tongtu.init;
 
 
 
+import com.tongtu.tongtu.data.DeviceRepository;
 import com.tongtu.tongtu.data.UserRepository;
+import com.tongtu.tongtu.domain.Device;
 import com.tongtu.tongtu.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -14,9 +16,9 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class UserInit {
+public class RepositoryInit {
     @Bean
-    public CommandLineRunner initUsers(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public CommandLineRunner initUsers(UserRepository userRepository, DeviceRepository deviceRepository,PasswordEncoder passwordEncoder){
         return args -> {
 
             User mhl = new User("mhl",passwordEncoder.encode("mhl"),"mhl@tongtu.xyz");
@@ -31,6 +33,12 @@ public class UserInit {
             horace=userRepository.findUserByUsername("horace");
             horace.setVerified(true);
             userRepository.save(horace);
+
+            Device device = new Device();
+            device.setUser(new User(1L));
+            device.setName("HUAWEI P30");
+            device.setAlias("动回的手机");
+            deviceRepository.save(device);
 
 
 
