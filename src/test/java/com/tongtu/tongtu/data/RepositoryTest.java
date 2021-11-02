@@ -16,6 +16,10 @@ public class RepositoryTest{
     FileInfoRepository fileInfoRepository;
     @Autowired
     DeviceRepository deviceRepository;
+    @Autowired
+    DeletedFileRepository deletedFileRepository;
+
+
     @Test
     public void repoTest() throws Exception{
         User user = new User("123","324","324@fdsa.com");
@@ -34,6 +38,11 @@ public class RepositoryTest{
         device.setName("huawei p30");
         device.setUser(new User(1L));
         deviceRepository.save(device);
+    }
+
+    @Test
+    public void fileTest() throws Exception{
+
     }
 
 
