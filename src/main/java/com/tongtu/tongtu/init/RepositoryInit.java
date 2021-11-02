@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RepositoryInit {
     @Bean
-    public CommandLineRunner initUsers(UserRepository userRepository, DeviceRepository deviceRepository,PasswordEncoder passwordEncoder){
+    public CommandLineRunner init(UserRepository userRepository, DeviceRepository deviceRepository,PasswordEncoder passwordEncoder){
         return args -> {
 
             User mhl = new User("mhl",passwordEncoder.encode("mhl"),"mhl@tongtu.xyz");

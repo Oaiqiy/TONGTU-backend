@@ -26,7 +26,7 @@ public class FileInfo {
 
 
 
-    @ManyToOne(cascade = CascadeType.DETACH,targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class)
     private User user;
 
     @ManyToOne(cascade = CascadeType.DETACH)

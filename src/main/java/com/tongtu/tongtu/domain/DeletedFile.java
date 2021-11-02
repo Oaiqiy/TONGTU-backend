@@ -15,8 +15,13 @@ import java.util.Date;
 public class DeletedFile{
 
     @Id
+    private Long id;
+
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "deletedFile")
     private FileInfo fileInfo;
+
+
+
     private Date createdAt;
 
 
