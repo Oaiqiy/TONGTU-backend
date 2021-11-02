@@ -20,6 +20,12 @@ public class FileInfo {
     private Date createdAt;
     private Boolean deleted = false;
 
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    private DeletedFile deletedFile;
+
+
+
     @ManyToOne(cascade = CascadeType.DETACH,targetEntity = User.class)
     private User user;
 
