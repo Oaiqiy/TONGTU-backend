@@ -16,10 +16,12 @@ public class ConnectTest {
 
 
        if (Boolean.TRUE.equals(redisTemplate.hasKey("tongtu"))){
-           System.out.println("has tongtu");
+           System.out.println(redisTemplate.opsForValue().get("tongtu"));
        }else {
            System.out.println("not has tongtu");
        }
+
+
 
     }
 }
