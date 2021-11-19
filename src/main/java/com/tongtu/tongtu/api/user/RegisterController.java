@@ -4,13 +4,16 @@ package com.tongtu.tongtu.api.user;
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.security.VerificationEmail;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@AllArgsConstructor
 public class RegisterController {
 
 
@@ -18,18 +21,15 @@ public class RegisterController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationEmail verificationEmail;
-    RegisterController(UserRepository userRepository,PasswordEncoder passwordEncoder,VerificationEmail verificationEmail){
-        this.userRepository=userRepository;
-        this.passwordEncoder=passwordEncoder;
-        this.verificationEmail=verificationEmail;
+    private final RabbitTemplate rabbitTemplate;
 
-    }
 
     @PostMapping("/register")
     public ResultInfo<String> register(@RequestBody RegisterForm registerForm){
         userRepository.save(registerForm.toUser(passwordEncoder));
         try {
-            verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
+            //verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
+            rabbitTemplate.convertAndSend("test",registerForm);
         }catch (Exception e){
             return new ResultInfo<>(1,"邮件发送失败！");
         }
