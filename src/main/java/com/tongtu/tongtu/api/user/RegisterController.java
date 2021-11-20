@@ -6,9 +6,19 @@ import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.security.VerificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.RequestContext;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/user")
@@ -25,8 +35,14 @@ public class RegisterController {
 
 
     @PostMapping("/register")
-    public ResultInfo<String> register(@RequestBody RegisterForm registerForm){
+        public ResultInfo<String> register(@RequestBody RegisterForm registerForm,HttpServletRequest request){
         userRepository.save(registerForm.toUser(passwordEncoder));
+
+        registerForm.setUri(request.getScheme()+"://"+request.getServerName());
+
+
+
+
         try {
             //verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
             rabbitTemplate.convertAndSend("test",registerForm);
