@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
 import java.util.Date;
 
 @Data
@@ -19,9 +19,6 @@ public class DeletedFile{
 
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "deletedFile")
     private FileInfo fileInfo;
-
-
-
     private Date createdAt;
 
 

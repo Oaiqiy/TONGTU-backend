@@ -14,10 +14,10 @@ import java.util.Objects;
 public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
-
+    private Long id;
+    private String uuid;
     private String name;
-    private String alias;
+    private String type;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     private User user;

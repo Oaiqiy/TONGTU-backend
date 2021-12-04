@@ -3,8 +3,10 @@ package com.tongtu.tongtu.init;
 
 
 import com.tongtu.tongtu.data.DeviceRepository;
+import com.tongtu.tongtu.data.FileInfoRepository;
 import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.domain.Device;
+import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -12,13 +14,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 
 
 @Slf4j
 @Component
 public class RepositoryInit {
     @Bean
-    public CommandLineRunner init(UserRepository userRepository, DeviceRepository deviceRepository,PasswordEncoder passwordEncoder){
+    public CommandLineRunner init(FileInfoRepository fileInfoRepository, UserRepository userRepository, DeviceRepository deviceRepository, PasswordEncoder passwordEncoder){
         return args -> {
 
             User mhl = new User("mhl",passwordEncoder.encode("mhl"),"mhl@tongtu.xyz");
@@ -37,8 +40,10 @@ public class RepositoryInit {
             Device device = new Device();
             device.setUser(new User(1L));
             device.setName("HUAWEI P30");
-            device.setAlias("动回的手机");
             deviceRepository.save(device);
+
+            FileInfo fileInfo = new FileInfo("test",2048L, FileInfo.FileType.IMAGE,mhl,device);
+            fileInfoRepository.save(fileInfo);
 
 
 

@@ -13,18 +13,16 @@ public class FileInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String bucket;
-    private String object;
-    private Long size;
+    private String name;
+    private Date uploadAt;
     private FileType fileType;
-    private Date createdAt;
+    private Long size;
+    private String folder;
     private Boolean deleted = false;
 
     @OneToOne
     @PrimaryKeyJoinColumn
     private DeletedFile deletedFile;
-
-
 
     @ManyToOne(targetEntity = User.class)
     private User user;
@@ -34,12 +32,11 @@ public class FileInfo {
 
     @PrePersist
     public void createdAt(){
-        createdAt = new Date();
+        uploadAt = new Date();
     }
 
-    public FileInfo(String bucket, String object, Long size, FileType fileType, User user, Device device) {
-        this.bucket = bucket;
-        this.object = object;
+    public FileInfo(String folder, Long size, FileType fileType, User user, Device device) {
+        this.folder = folder;
         this.size = size;
         this.fileType = fileType;
         this.user = user;
@@ -51,6 +48,8 @@ public class FileInfo {
     public enum FileType{
         IMAGE,VIDEO,AUDIO,TEXT,OTHER
     }
+
+
 
 
 }
