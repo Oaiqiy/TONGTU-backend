@@ -15,6 +15,7 @@ public class ConnectTest {
     public void connect(){
 
 
+
        if (Boolean.TRUE.equals(redisTemplate.hasKey("tongtu"))){
            System.out.println(redisTemplate.opsForValue().get("tongtu"));
        }else {

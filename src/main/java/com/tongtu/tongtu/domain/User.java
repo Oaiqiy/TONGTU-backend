@@ -27,6 +27,7 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private  String username;
+
     @JsonIgnore
     private  String password;
     /**
@@ -56,10 +57,6 @@ public class User implements UserDetails {
 
 
 
-
-
-
-
     @PrePersist
     void createdAt(){
         createdAt=new Date();
@@ -84,6 +81,8 @@ public class User implements UserDetails {
     public User(Long id){
         this.id = id;
     }
+
+    public User(String name){this.username = name;}
 
     public User(String username, String password, String email) {
         this.username = username;

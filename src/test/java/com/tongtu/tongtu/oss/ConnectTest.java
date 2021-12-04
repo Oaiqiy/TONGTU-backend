@@ -67,7 +67,7 @@ public class ConnectTest {
     @Test
     public void ossCallback() throws Exception{
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest("examplesbucket","误差求根.pdf",new File("F:\\QQDownload\\误差求根.pdf"));
+        PutObjectRequest putObjectRequest = new PutObjectRequest("examplesbucket","Java.zip",new File("F:\\QQDownload\\BUPT-情景英语-V21.4.19版本.zip"));
         Callback callback = new Callback();
         //System.out.println(MvcUriComponentsBuilder.fromMethodName(CallbackController.class, "ossCallback", new CallbackForm("f",1l,3l,"f","f")).toUriString());
         callback.setCallbackUrl("http://api.tongtu.xyz/oss/callback");
@@ -80,12 +80,12 @@ public class ConnectTest {
         callback.setCallbackVar(var);
         callback.addCallbackVar("test","ffff");
 
-        putObjectRequest.setCallback(callback);
+       // putObjectRequest.setCallback(callback);
 
-//        PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
-//
-//        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
-//        System.out.println(scanner.next());
+        PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
+        System.out.println("begin_______________________");
+        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
+        System.out.println(scanner.next());
 
     }
 }

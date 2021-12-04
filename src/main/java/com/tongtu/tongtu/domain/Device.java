@@ -1,9 +1,11 @@
 package com.tongtu.tongtu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -15,12 +17,16 @@ public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonIgnore
     private String uuid;
     private String name;
+    private String alias;
     private String type;
 
     @ManyToOne(cascade = CascadeType.DETACH)
+    @JsonIgnore
     private User user;
+    private Date lastLoginAt;
 
 
     @Override
@@ -28,7 +34,6 @@ public class Device {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Device device = (Device) o;
-
         return Objects.equals(id, device.id);
     }
 
@@ -39,6 +44,13 @@ public class Device {
 
     public Device(Long id){
         this.id = id;
+    }
+
+    public Device(String uuid,String name,String type,User user){
+        this.uuid = uuid;
+        this.name = name;
+        this.type = type;
+        this.user = user;
     }
 
 

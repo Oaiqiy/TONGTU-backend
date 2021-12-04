@@ -29,12 +29,16 @@ public class ConnectTest {
        // Message message = converter.toMessage("666",properties);
       //  rabbitTemplate.send("test",message);
 
-        rabbitTemplate.convertAndSend("test",horace);
+
+        rabbitTemplate.convertAndSend("dev",horace);
 
 
+        Thread.sleep(10000);
 
-        var t = rabbitTemplate.receiveAndConvert("test", new ParameterizedTypeReference<User>() {
+        var t = rabbitTemplate.receiveAndConvert("dev", new ParameterizedTypeReference<User>() {
         });
+
+
         System.out.println(t);
 
     }
