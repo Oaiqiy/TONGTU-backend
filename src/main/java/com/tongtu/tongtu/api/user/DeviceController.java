@@ -2,7 +2,9 @@ package com.tongtu.tongtu.api.user;
 
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.DeviceRepository;
+import com.tongtu.tongtu.data.FileInfoRepository;
 import com.tongtu.tongtu.domain.Device;
+import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,7 @@ import java.util.Map;
 @RequestMapping("/user/device")
 public class DeviceController {
     private DeviceRepository deviceRepository;
+    private FileInfoRepository fileInfoRepository;
 
 
     /**
@@ -53,15 +56,24 @@ public class DeviceController {
 
     /**
      * 通过id删除设备使设备不能再次获取token
-     * @param id
      * @return
      */
 
-    @PostMapping("{id}")
-    public ResultInfo<String> deleteDevice(@PathVariable Long id){
+    @PostMapping("delete")
+    public ResultInfo<String> deleteDevice(@RequestBody Map<String,Long> data){
+        if(data.get("old")==null){
+            return new ResultInfo<>(1,"empty body");
+        }
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        deviceRepository.deleteDeviceByIdAndUser_Id(id,user.getId());
-        return new ResultInfo<>(0,"deleted");
+        if(data.get("new")!=null){
+            fileInfoRepository.updateFileInfoDevice(data.get("new"),data.get("old"));
+            deviceRepository.deleteDeviceByIdAndUser_Id(data.get("old"),user.getId());
+        }else{
+            deviceRepository.deleteDeviceByIdAndUser_Id(data.get("old"),user.getId());
+        }
+
+        return new ResultInfo<>(0,"delete successfully");
+
     }
 
     /**
@@ -76,6 +88,8 @@ public class DeviceController {
         deviceRepository.updateAlias(id,alias);
         return new ResultInfo<>(0,"updated");
     }
+
+
 
 
 

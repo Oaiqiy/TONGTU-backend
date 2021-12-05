@@ -42,7 +42,7 @@ public class RepositoryInit {
             device.setName("HUAWEI P30");
             deviceRepository.save(device);
 
-            FileInfo fileInfo = new FileInfo("test",2048L, FileInfo.FileType.IMAGE,mhl,device);
+            FileInfo fileInfo = new FileInfo("test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
 

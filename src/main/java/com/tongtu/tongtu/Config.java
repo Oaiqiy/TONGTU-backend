@@ -24,11 +24,5 @@ public class Config {
     }
 
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void test(ApplicationReadyEvent applicationReadyEvent) {
 
-        UserRepository userRepository = (UserRepository) applicationReadyEvent.getApplicationContext().getBean("userRepository");
-        System.out.println(userRepository.findUserByUsername("mhl").getEmail());
-
-    }
 }
