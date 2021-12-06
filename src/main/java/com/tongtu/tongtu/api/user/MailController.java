@@ -16,6 +16,8 @@ public class MailController {
         this.tokenProcessor=tokenProcessor;
         this.userRepository=userRepository;
     }
+
+
     @GetMapping("/check")
     public String mailCheck(String token){
         String username;

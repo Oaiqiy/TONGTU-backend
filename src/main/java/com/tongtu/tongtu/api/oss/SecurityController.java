@@ -2,17 +2,10 @@ package com.tongtu.tongtu.api.oss;
 
 
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.oss.OssUtils;
 import com.tongtu.tongtu.security.jwt.TokenProcessor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
-import org.springframework.cglib.beans.BeanMap;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +22,12 @@ public class SecurityController {
 
     private OssUtils ossUtils;
     private TokenProcessor tokenProcessor;
+
+    /**
+     * 获取oss token
+     * @param token 路径中传入登录token
+     * @return 返回信息由阿里云处理
+     */
 
     @GetMapping("/sts/{token}")
     public Map<String,String> securityToken(@PathVariable String token){
