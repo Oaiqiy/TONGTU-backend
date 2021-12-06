@@ -5,7 +5,9 @@ import com.tongtu.tongtu.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -19,27 +21,42 @@ public class PreUpload {
     private RedisTemplate<String,String> redisTemplate;
 
     @RabbitListener(queues = "upload")
+    @SendTo("upload")
     public Boolean preUpload(@NotNull Map<String,String> message){
+
+
+        if(message.get("name")==null){
+            return false;
+        }
 
         User user = userRepository.findUserByUsername(message.get("name"));
         Long usedStorage = user.getUsedStorage();
         String id = user.getId().toString();
+        System.out.println(usedStorage);
+        System.out.println(message.get("size"));
 
-        if(!redisTemplate.hasKey(id)){
-            redisTemplate.opsForList().leftPush(id,id+"db");
-            redisTemplate.opsForValue().set(id+"db",usedStorage.toString());
-        }else{
-            for(long i=0;i<redisTemplate.opsForList().size(id);i++){
-                usedStorage += Long.parseLong(redisTemplate.opsForValue().get(redisTemplate.opsForList().index(id,i)));
-            }
-        }
-
-        if(usedStorage+ Long.parseLong(message.get("size"))<=user.getMaxStorage()){
-            redisTemplate.opsForList().leftPush(id,message.get("file"));
+        if(usedStorage+Long.parseLong(message.get("size"))<user.getMaxStorage()){
             return true;
         }else {
             return false;
         }
+
+//
+//        if(!redisTemplate.hasKey(id)){
+//            redisTemplate.opsForList().leftPush(id,id+"db");
+//            redisTemplate.opsForValue().set(id+"db",usedStorage.toString());
+//        }else{
+//            for(long i=0;i<redisTemplate.opsForList().size(id);i++){
+//                usedStorage += Long.parseLong(redisTemplate.opsForValue().get(redisTemplate.opsForList().index(id,i)));
+//            }
+//        }
+//
+//        if(usedStorage+ Long.parseLong(message.get("size"))<=user.getMaxStorage()){
+//            redisTemplate.opsForList().leftPush(id,message.get("file"));
+//            return true;
+//        }else {
+//            return false;
+//        }
 
 
     }

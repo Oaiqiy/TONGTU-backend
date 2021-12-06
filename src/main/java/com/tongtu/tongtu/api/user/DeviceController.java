@@ -8,6 +8,8 @@ import com.tongtu.tongtu.domain.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,7 @@ public class DeviceController {
         String name = deviceInfo.get("name");
         String type = deviceInfo.get("type");
         Device device = new Device(uuid,name,type, (User) SecurityContextHolder.getContext().getAuthentication().getDetails());
+        device.setLastLoginAt(new Date());
         device = deviceRepository.save(device);
         return new ResultInfo<>(0,"success",device.getId().toString());
 
@@ -56,25 +59,25 @@ public class DeviceController {
 
     /**
      * 通过id删除设备使设备不能再次获取token
-     * @param data a json include "old" and optional "new"
-     *             if include "new" the files uploaded by "old" device will be transformed to "new" device
-     *             if not include "new" the files uploaded by "old" will be deleted
+     * @param data a json include "old" and optional "new"<br>
+     *             if include "new" the files uploaded by "old" device will be transformed to "new" device<br>
+     *             if not include "new" the files uploaded by "old" will be deleted<br>
      *             "old" and "new" both are device id
      * @return if success
      */
 
     @PostMapping("delete")
     public ResultInfo<String> deleteDevice(@RequestBody Map<String,Long> data){
-        if(data.get("old")==null){
+        if(data.get("old")==null||data.get("new")==null){
             return new ResultInfo<>(1,"empty body");
         }
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        if(data.get("new")!=null){
-            fileInfoRepository.updateFileInfoDevice(data.get("new"),data.get("old"));
-            deviceRepository.deleteDeviceByIdAndUser_Id(data.get("old"),user.getId());
-        }else{
-            deviceRepository.deleteDeviceByIdAndUser_Id(data.get("old"),user.getId());
+
+        if(data.get("delete")!=null){
+            fileInfoRepository.updateFileInfoDeleted(data.get("old"));
         }
+        fileInfoRepository.updateFileInfoDevice(data.get("new"),data.get("old"));
+        deviceRepository.deleteDeviceByIdAndUser_Id(data.get("old"),user.getId());
 
         return new ResultInfo<>(0,"delete successfully");
 

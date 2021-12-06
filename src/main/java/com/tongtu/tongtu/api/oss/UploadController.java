@@ -17,15 +17,27 @@ import java.util.Map;
 public class UploadController {
     private final RabbitTemplate rabbitTemplate;
 
+    /**
+     * upload control
+     * @param size the size of uploading file
+     * @param MD5 the file's MD5 code
+     * @return if code equals 0,success else error
+     */
+
     @GetMapping("/upload")
     public ResultInfo<Map<String,String>> preUpload(Long size,String MD5){
-        System.out.println(MD5);
+
+
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Map<String,String> message = new HashMap<>();
+        
         message.put("name",name);
         message.put("size",size.toString());
         message.put("file",MD5);
-        Boolean result = (Boolean) rabbitTemplate.convertSendAndReceive("upload",message);
+
+        Boolean result = (Boolean) rabbitTemplate.convertSendAndReceive("upload","upload",message);
+
+
         if(Boolean.TRUE.equals(result)){
             return new ResultInfo<>(0,"upload!");
         }else {
