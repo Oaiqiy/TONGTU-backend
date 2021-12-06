@@ -10,7 +10,7 @@ import java.util.List;
 public interface DeviceRepository extends CrudRepository<Device,Long> {
     Device findDeviceById(Long id);
     List<Device> findDevicesByUser_IdOrderByLastLoginAt(Long user_id);
-
+    List<Device> findDevicesByUser_UsernameOrderByLastLoginAt(String username);
     void deleteDeviceByIdAndUser_Id(Long id,Long userID);
     @Query(value = "update Device set lastLoginAt = ?2 where id = ?1")
     void updateLastLoginAt(Long id, Date date);

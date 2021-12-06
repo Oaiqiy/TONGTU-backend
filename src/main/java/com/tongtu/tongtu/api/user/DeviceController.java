@@ -4,7 +4,6 @@ import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.DeviceRepository;
 import com.tongtu.tongtu.data.FileInfoRepository;
 import com.tongtu.tongtu.domain.Device;
-import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +21,8 @@ public class DeviceController {
 
     /**
      * 新增设备时使用
-     * @param deviceInfo
-     * @return
+     * @param deviceInfo json includes uuid name type
+     * @return if success
      */
 
     @PostMapping("add")
@@ -44,19 +43,24 @@ public class DeviceController {
 
     /**
      * 获取用户全部设备信息
-     * @return
+     * @return device list
      */
 
     @GetMapping("list")
     public ResultInfo<List<Device>> getAllDevice(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        List<Device> devices = deviceRepository.findDevicesByUser_IdOrderByLastLoginAt(user.getId());
+        //String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Device> devices = deviceRepository.findDevicesByUser_UsernameOrderByLastLoginAt(user.getUsername());
         return new ResultInfo<>(0,"success",devices);
     }
 
     /**
      * 通过id删除设备使设备不能再次获取token
-     * @return
+     * @param data a json include "old" and optional "new"
+     *             if include "new" the files uploaded by "old" device will be transformed to "new" device
+     *             if not include "new" the files uploaded by "old" will be deleted
+     *             "old" and "new" both are device id
+     * @return if success
      */
 
     @PostMapping("delete")
@@ -78,9 +82,9 @@ public class DeviceController {
 
     /**
      * 重命名设备
-     * @param id
-     * @param alias
-     * @return
+     * @param id device id
+     * @param alias device alias
+     * @return if success
      */
 
     @GetMapping("{id}/{alias}")
