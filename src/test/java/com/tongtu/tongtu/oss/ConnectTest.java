@@ -84,8 +84,8 @@ public class ConnectTest {
 
         PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
         System.out.println("begin_______________________");
-        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
-        System.out.println(scanner.next());
+//        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
+//        System.out.println(scanner.next());
 
     }
 }

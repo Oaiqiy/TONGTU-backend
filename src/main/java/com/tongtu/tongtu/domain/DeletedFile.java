@@ -1,12 +1,9 @@
 package com.tongtu.tongtu.domain;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 import javax.persistence.*;
-
 import java.util.Date;
 
 @Data
@@ -20,6 +17,9 @@ public class DeletedFile{
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "deletedFile")
     private FileInfo fileInfo;
     private Date createdAt;
+
+    @ManyToOne
+    private Device deletingDevice;
 
 
     @PrePersist

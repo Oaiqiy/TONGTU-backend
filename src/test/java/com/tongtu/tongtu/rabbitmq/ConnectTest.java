@@ -33,7 +33,7 @@ public class ConnectTest {
         rabbitTemplate.convertAndSend("dev",horace);
 
 
-        Thread.sleep(10000);
+
 
         var t = rabbitTemplate.receiveAndConvert("dev", new ParameterizedTypeReference<User>() {
         });

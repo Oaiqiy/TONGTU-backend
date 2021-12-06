@@ -6,6 +6,9 @@ import com.tongtu.tongtu.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * callback form
+ */
 @Data
 @AllArgsConstructor
 public class CallbackForm {
@@ -14,12 +17,13 @@ public class CallbackForm {
     private Long size;
     private Long user;
     private Long device;
-    private String group;
+    private String folder;
+    private String description;
+    private String MD5;
 
 
     public FileInfo toFileInfo(){
-        return new FileInfo(group,size, FileInfo.FileType.values()[type],new User(user),new Device(device));
-
+        return new FileInfo(folder,size, FileInfo.FileType.values()[type],new User(user),new Device(device),description);
     }
 
 

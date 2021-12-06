@@ -1,5 +1,7 @@
 package com.tongtu.tongtu.security.jwt;
 
+import com.tongtu.tongtu.data.DeviceRepository;
+import com.tongtu.tongtu.data.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,10 +23,12 @@ import java.util.Arrays;
 @Slf4j
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
-    TokenProcessor tokenProcessor;
-    public AuthorizationFilter(TokenProcessor tokenProcessor, AuthenticationManager authenticationManager){
+    private TokenProcessor tokenProcessor;
+    private UserRepository userRepository;
+    public AuthorizationFilter(TokenProcessor tokenProcessor, AuthenticationManager authenticationManager,UserRepository userRepository){
         super(authenticationManager);
         this.tokenProcessor=tokenProcessor;
+        this.userRepository = userRepository;
 
     }
 
@@ -38,9 +42,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
         UsernamePasswordAuthenticationToken auth;
 
+        String username = null;
+
         if(token!=null){
 
-            String username = tokenProcessor.decodeToken(token);
+            username = tokenProcessor.decodeToken(token);
             if(username!=null){
                 auth = new UsernamePasswordAuthenticationToken(username,token, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
 
@@ -53,6 +59,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             auth =new UsernamePasswordAuthenticationToken(null,null,null);
         }
 
+        auth.setDetails(userRepository.findUserByUsername(username));
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 

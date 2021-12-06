@@ -1,10 +1,12 @@
 package com.tongtu.tongtu.security;
 
 
+import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.oss.OssUtils;
 import com.tongtu.tongtu.security.jwt.AuthenticationFilter;
 import com.tongtu.tongtu.security.jwt.AuthorizationFilter;
 import com.tongtu.tongtu.security.jwt.TokenProcessor;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,6 +28,7 @@ import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
@@ -33,10 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private UserDetailsService userDetailsService;
     private OssUtils ossUtils;
-    SecurityConfig(UserDetailsService userDetailsService, OssUtils ossUtils){
-        this.userDetailsService=userDetailsService;
-        this.ossUtils = ossUtils;
-    }
+    private UserRepository userRepository;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     public AuthorizationFilter authorizationFilter() throws Exception{
-        return new AuthorizationFilter(tokenProcessor(), authenticationManagerBean());
+        return new AuthorizationFilter(tokenProcessor(), authenticationManagerBean(),userRepository);
     }
 
 

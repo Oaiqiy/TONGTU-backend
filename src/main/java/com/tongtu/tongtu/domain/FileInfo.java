@@ -4,12 +4,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor(force = true)
-public class FileInfo {
+public class FileInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +19,7 @@ public class FileInfo {
     private FileType fileType;
     private Long size;
     private String folder;
+    private String description;
     private Boolean deleted = false;
 
     @OneToOne
@@ -27,7 +29,7 @@ public class FileInfo {
     @ManyToOne(targetEntity = User.class)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Device device;
 
     @PrePersist
@@ -35,12 +37,13 @@ public class FileInfo {
         uploadAt = new Date();
     }
 
-    public FileInfo(String folder, Long size, FileType fileType, User user, Device device) {
+    public FileInfo(String folder, Long size, FileType fileType, User user, Device device,String description) {
         this.folder = folder;
         this.size = size;
         this.fileType = fileType;
         this.user = user;
         this.device = device;
+        this.description = description;
     }
 
 
