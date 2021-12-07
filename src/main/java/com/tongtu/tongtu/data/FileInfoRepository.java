@@ -34,7 +34,9 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update FileInfo set deleted = 1 where id = ?1 and user.id = ?2")
-    void updateFileInfoDeletedByFileInfoIdAndUserId(Long fileId,Long userId);
+    @Query(value = "update FileInfo set deleted = ?3 where id = ?1 and user.id = ?2")
+    void updateFileInfoDeletedByFileInfoIdAndUserId(Long fileId,Long userId,Boolean deleted);
+
+
 
 }

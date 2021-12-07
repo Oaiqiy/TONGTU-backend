@@ -110,7 +110,7 @@ public class FileController {
         user.addRecycle(fileInfo.getSize());
         user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
         userRepository.save(user);
-        fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(file_id,user.getId());
+        fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(file_id,user.getId(),true);
         DeletedFile deletedFile = new DeletedFile();
         deletedFile.setId(file_id);
         deletedFile.setDeletingDevice(new Device(device_id));
@@ -219,7 +219,7 @@ public class FileController {
         FileInfo fileInfo = fileInfoRepository.findFileInfoByIdAndUser_Id(id,user.getId());
         if(fileInfo==null)
             return new ResultInfo<>(1,"no such file");
-        fileInfoRepository.deleteFileInfosByUser_IdAndDeleted(id,false);
+        fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(id,user.getId(),false);
         deletedFileRepository.deleteById(id);
 
         return new ResultInfo<>(0,"success");

@@ -10,7 +10,7 @@
 
 	<groupId>com.tongtu</groupId>
 	<artifactId>TONGTU</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>TONGTU</name>
 	<description>TONGTU</description>
 	<properties>
