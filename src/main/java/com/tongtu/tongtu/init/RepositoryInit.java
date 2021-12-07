@@ -47,8 +47,18 @@ public class RepositoryInit {
             device.setName("IPhone 12");
             deviceRepository.save(device);
 
-            FileInfo fileInfo = new FileInfo("test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            FileInfo fileInfo = new FileInfo("file1","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
+
+            fileInfo = new FileInfo("file2","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            fileInfoRepository.save(fileInfo);
+
+            fileInfo = new FileInfo("file3","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            fileInfoRepository.save(fileInfo);
+
+            fileInfo = new FileInfo("file4","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            fileInfoRepository.save(fileInfo);
+
 
 
 

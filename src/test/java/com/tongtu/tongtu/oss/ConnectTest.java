@@ -11,6 +11,10 @@ import com.aliyuncs.exceptions.ServerException;
 import com.google.gson.Gson;
 import com.tongtu.tongtu.api.oss.CallbackController;
 import com.tongtu.tongtu.api.oss.CallbackForm;
+import com.tongtu.tongtu.data.FileInfoRepository;
+import com.tongtu.tongtu.domain.Device;
+import com.tongtu.tongtu.domain.FileInfo;
+import com.tongtu.tongtu.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration;
@@ -30,7 +34,10 @@ public class ConnectTest {
     private OSS oss;
 
     @Autowired
-    IAcsClient client;
+    private IAcsClient client;
+
+    @Autowired
+    private FileInfoRepository fileInfoRepository;
 
     @Test
     public void connect(){
@@ -67,25 +74,35 @@ public class ConnectTest {
     @Test
     public void ossCallback() throws Exception{
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest("examplesbucket","Java.zip",new File("F:\\QQDownload\\BUPT-情景英语-V21.4.19版本.zip"));
+        PutObjectRequest putObjectRequest = new PutObjectRequest("examplesbucket","Animee/Java.zip",new File("F:\\QQDownload\\XML_DOM.zip"));
         Callback callback = new Callback();
         //System.out.println(MvcUriComponentsBuilder.fromMethodName(CallbackController.class, "ossCallback", new CallbackForm("f",1l,3l,"f","f")).toUriString());
         callback.setCallbackUrl("http://api.tongtu.xyz/oss/callback");
         //callback.setCallbackHost("oss-cn-beijing.aliyuncs.com");
         callback.setCalbackBodyType(Callback.CalbackBodyType.JSON);
         //callback.setCallbackBody("{\\\"mimeType\\\":\\\"text\\\",\\\"size\\\":1024}");
-        callback.setCallbackBody("{\\\"mimeType\\\":${mimeType},\\\"size\\\":${size},\\\"id\\\":${x:id},\\\"bucket\\\":${bucket},\\\"object\\\":${object}}");
+        callback.setCallbackBody("{\\\"mimeType\\\":${mimeType},\\\"size\\\":${size},\\\"user\\\":${x:user},\\\"bucket\\\":${bucket},\\\"object\\\":${object}}");
         Map<String,String> var = new HashMap<>();
-        var.put("x:id","123456");
+        var.put("x:user","123456");
         callback.setCallbackVar(var);
         callback.addCallbackVar("test","ffff");
 
-       // putObjectRequest.setCallback(callback);
-
-        PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
-        System.out.println("begin_______________________");
+        putObjectRequest.setCallback(callback);
+//
+//        PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
+//        System.out.println("begin_______________________");
 //        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
 //        System.out.println(scanner.next());
 
+    }
+    @Test
+    public void delete(){
+        oss.deleteObject("examplesbucket","test.txt");
+    }
+
+    @Test
+    public void callbackFormTest(){
+        CallbackForm callbackForm =new CallbackForm("fadf","afdsa", 1,3421L,1L,1L,"fa","fasdf","fasf");
+        fileInfoRepository.save(callbackForm.toFileInfo());
     }
 }

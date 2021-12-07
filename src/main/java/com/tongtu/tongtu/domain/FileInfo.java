@@ -23,7 +23,7 @@ public class FileInfo implements Serializable {
     private String description;
     private Boolean deleted = false;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private DeletedFile deletedFile;
 

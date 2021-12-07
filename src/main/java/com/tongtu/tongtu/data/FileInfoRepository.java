@@ -12,6 +12,15 @@ import java.util.List;
 
 public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
     List<FileInfo> findFileInfosByUser_Id(Long user_id);
+    List<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted);
+    FileInfo findFileInfosById(Long id);
+    FileInfo findFileInfoByIdAndUser_Id(Long id,Long userId);
+    @Transactional
+    void deleteFileInfoById(Long fileId);
+    Page<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted,Pageable pageable);
+    Page<FileInfo> findFileInfosByUser_IdAndDeletedAndFolder(Long id,Boolean deleted,String folder,Pageable pageable);
+    @Transactional
+    void deleteFileInfosByUser_IdAndDeleted(Long id,Boolean deleted);
 
     @Modifying
     @Transactional
@@ -25,10 +34,7 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update FileInfo set deleted = 1 where device.id = ?1 and user.id = ?2")
-    void updateFileInfoDeletedByDeviceIdAndUserId(Long deviceId,Long userId);
+    @Query(value = "update FileInfo set deleted = 1 where id = ?1 and user.id = ?2")
+    void updateFileInfoDeletedByFileInfoIdAndUserId(Long fileId,Long userId);
 
-    void deleteFileInfoById(Long fileId);
-
-    Page<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted,Pageable pageable);
 }

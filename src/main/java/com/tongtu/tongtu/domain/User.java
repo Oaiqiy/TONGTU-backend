@@ -78,6 +78,30 @@ public class User implements UserDetails {
         }
     }
 
+    public void deleteFile(Long size, FileInfo.FileType fileType){
+        usedStorage-=size;
+        switch (fileType){
+            case IMAGE:
+                imageStorage-=size;
+            case VIDEO:
+                videoStorage-=size;
+            case AUDIO:
+                audioStorage-=size;
+            case TEXT:
+                textStorage-=size;
+            case OTHER:
+                otherStorage-=size;
+        }
+    }
+
+    public void addRecycle(Long size){
+        usedRecycleStorage += size;
+    }
+
+    public void deleteRecycle(Long size){
+        usedRecycleStorage-=size;
+    }
+
     public User(Long id){
         this.id = id;
     }
