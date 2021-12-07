@@ -1,6 +1,7 @@
 package com.tongtu.tongtu.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -14,6 +15,7 @@ public class DeletedFile{
     @Id
     private Long id;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "deletedFile")
     private FileInfo fileInfo;
     private Date createdAt;
