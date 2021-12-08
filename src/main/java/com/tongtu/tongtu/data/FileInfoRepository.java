@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
@@ -16,8 +17,15 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
     List<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted);
     FileInfo findFileInfosById(Long id);
     FileInfo findFileInfoByIdAndUser_Id(Long id,Long userId);
+
+    @Transactional
+    void deleteFileInfosByDeletedFile_CreatedAtLessThan(Date date);
+
+
+
     @Transactional
     void deleteFileInfoById(Long fileId);
+
     Page<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted,Pageable pageable);
     Page<FileInfo> findFileInfosByUser_IdAndDeletedAndFolder(Long id,Boolean deleted,String folder,Pageable pageable);
     @Transactional

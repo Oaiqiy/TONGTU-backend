@@ -2,11 +2,15 @@ package com.tongtu.tongtu.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tongtu.tongtu.api.ResultInfo;
+import com.tongtu.tongtu.domain.DeletedFile;
 import com.tongtu.tongtu.domain.Device;
+import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Date;
 
 @SpringBootTest
 public class RepositoryTest{
@@ -43,6 +47,16 @@ public class RepositoryTest{
     @Test
     public void fileTest() throws Exception{
 
+//        FileInfo fileInfo = fileInfoRepository.findFileInfosById(1L);
+//        DeletedFile deletedFile = new DeletedFile();
+//        deletedFile.setId(1L);
+//        fileInfo.setDeletedFile(deletedFile);
+//
+//
+//        fileInfoRepository.save(fileInfo);
+//        System.out.println(fileInfoRepository.findFileInfosByUser_Id(1L).size());
+//        fileInfoRepository.deleteFileInfosByDeletedFile_CreatedAtLessThan(new Date());
+//        System.out.println(fileInfoRepository.findFileInfosByUser_Id(1L).size());
     }
 
 

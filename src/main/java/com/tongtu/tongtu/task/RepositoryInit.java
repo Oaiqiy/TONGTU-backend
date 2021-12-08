@@ -1,4 +1,4 @@
-package com.tongtu.tongtu.init;
+package com.tongtu.tongtu.task;
 
 
 
@@ -13,8 +13,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 
 @Slf4j
