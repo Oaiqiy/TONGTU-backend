@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
+
     List<FileInfo> findFileInfosByUser_Id(Long user_id);
     List<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted);
     FileInfo findFileInfosById(Long id);

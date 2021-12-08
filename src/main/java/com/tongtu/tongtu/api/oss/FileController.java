@@ -107,9 +107,13 @@ public class FileController {
         if(user.getUsedRecycleStorage()+fileInfo.getSize()> user.getRecycleStorage()){
             return new ResultInfo<>(2,"recycle bin is full");
         }
-        user.addRecycle(fileInfo.getSize());
-        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
-        userRepository.save(user);
+//        user.addRecycle(fileInfo.getSize());
+//        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
+//        userRepository.save(user);
+
+        userRepository.updateUsedRecycleStorage(fileInfo.getSize(), user.getId());
+        userRepository.updateUsedStorage(-fileInfo.getSize(), user.getId());
+
         fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(file_id,user.getId(),true);
         DeletedFile deletedFile = new DeletedFile();
         deletedFile.setId(file_id);
@@ -135,8 +139,9 @@ public class FileController {
 
         //TODO: mq
         fileInfoRepository.deleteFileInfoById(file_id);
-        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
-        userRepository.save(user);
+//        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
+//        userRepository.save(user);
+        userRepository.updateUsedStorage(fileInfo.getSize(),user.getId());
         deleteFileInOSS(user, fileInfo);
 
         return new ResultInfo<>(0,"success");
@@ -144,7 +149,7 @@ public class FileController {
     }
 
     /**
-     * 获取回收站信息
+     * 分页获取回收站信息
      * @param size page size
      * @param page page num from zero
      * @return if request successfully, return file counts and file infos.<br>
@@ -182,8 +187,10 @@ public class FileController {
 
         deleteFileInOSS(user, fileInfo);
 
-        user.deleteRecycle(fileInfo.getSize());
-        userRepository.save(user);
+        userRepository.updateUsedRecycleStorage(fileInfo.getSize(),user.getId());
+
+//        user.deleteRecycle(fileInfo.getSize());
+//        userRepository.save(user);
 
         return new ResultInfo<>(0,"success");
     }
@@ -200,10 +207,11 @@ public class FileController {
 
         for (FileInfo fileInfo : fileInfos) {
             deleteFileInOSS(user, fileInfo);
-            user.deleteRecycle(fileInfo.getSize());
+//            user.deleteRecycle(fileInfo.getSize());
+            userRepository.updateUsedRecycleStorage(fileInfo.getSize(), user.getId());
         }
 
-        userRepository.save(user);
+//        userRepository.save(user);
         fileInfoRepository.deleteFileInfosByUser_IdAndDeleted(user.getId(),true);
         return new ResultInfo<>(0,"success");
     }
@@ -211,7 +219,7 @@ public class FileController {
     /**
      * 恢复回收站中的文件
      * @param id file id
-     * @return
+     * @return success
      */
     @PostMapping("restore/{id}")
     public ResultInfo<String> restoreFile(@PathVariable Long id){
@@ -219,8 +227,11 @@ public class FileController {
         FileInfo fileInfo = fileInfoRepository.findFileInfoByIdAndUser_Id(id,user.getId());
         if(fileInfo==null)
             return new ResultInfo<>(1,"no such file");
+
         fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(id,user.getId(),false);
         deletedFileRepository.deleteById(id);
+        userRepository.updateUsedRecycleStorage(fileInfo.getSize(),user.getId());
+        userRepository.updateUsedStorage(-fileInfo.getSize(), user.getId());
 
         return new ResultInfo<>(0,"success");
     }
