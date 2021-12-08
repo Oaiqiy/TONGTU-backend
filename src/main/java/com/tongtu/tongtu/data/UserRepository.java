@@ -12,14 +12,34 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface UserRepository extends CrudRepository<User, Long> {
+
+    /**
+     * find user by user's id
+     * @param id user's id
+     * @return a user if exists
+     */
     User findUserById(Long id);
 
+    /**
+     * find user by username
+     * @param username username
+     * @return a user if exists
+     */
     User findUserByUsername(String username);
 
+    /**
+     * judge if a user exists by username
+     * @param username username
+     * @return if exists
+     */
     boolean existsByUsername(String username);
 
+    /**
+     * judj3 if a user exists by email
+     * @param email user's email
+     * @return if exists
+     */
     boolean existsByEmail(String email);
-
 
     /**
      * update user's used storage
