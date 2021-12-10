@@ -12,13 +12,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CallbackForm {
+    private Long target;
     private String object;
-    private String name;
     private int type;
     private Long size;
     private Long user;
     private Long device;
-    private String folder;
     private String description;
     private String MD5;
 

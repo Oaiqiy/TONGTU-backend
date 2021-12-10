@@ -4,10 +4,7 @@ import com.tongtu.tongtu.api.ResultInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/oss/callback")
 @Slf4j
@@ -18,8 +15,6 @@ public class CallbackController {
 
     @PostMapping
     public ResultInfo<CallbackForm> ossCallback(@RequestBody CallbackForm callbackForm){
-
-
 
         rabbitTemplate.convertAndSend("callback",callbackForm);
 
