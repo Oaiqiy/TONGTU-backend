@@ -36,6 +36,7 @@ public class SecurityController {
         try{
             if(tokenProcessor.decodeToken(token)==null){
                throw new Exception();
+               
             }
             AssumeRoleResponse.Credentials credentials = ossUtils.getOssToken().getCredentials();
             result.put("StatusCode","200");

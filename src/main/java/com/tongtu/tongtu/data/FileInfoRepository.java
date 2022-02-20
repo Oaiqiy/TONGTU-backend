@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
 
+    // SELECT
+
     /**
      * find file infos by user's id
      * @param user_id user's id
@@ -62,6 +64,8 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
      */
     Page<FileInfo> findFileInfosByUser_IdAndDeletedAndFolder(Long id,Boolean deleted,String folder,Pageable pageable);
 
+    //DELETE
+
     /**
      * delete file infos by the delete time
      * @param date delete time
@@ -83,6 +87,8 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
      */
     @Transactional
     void deleteFileInfosByUser_IdAndDeleted(Long id,Boolean deleted);
+
+    //UPDATE
 
     /**
      * update file's device

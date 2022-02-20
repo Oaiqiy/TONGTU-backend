@@ -1,7 +1,6 @@
 package com.tongtu.tongtu.task;
 
 import com.tongtu.tongtu.data.FileInfoRepository;
-import com.tongtu.tongtu.domain.FileInfo;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +14,7 @@ import java.util.Date;
 @Data
 @RequiredArgsConstructor
 @ConfigurationProperties("tongtu.recycle")
-public class checkRecycleBin {
+public class CheckRecycleBin {
     private Integer dates = 7;
     private final FileInfoRepository fileInfoRepository;
 

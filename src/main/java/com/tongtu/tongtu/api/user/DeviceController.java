@@ -96,8 +96,4 @@ public class DeviceController {
         return new ResultInfo<>(0,"updated");
     }
 
-
-
-
-
 }

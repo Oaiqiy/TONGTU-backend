@@ -1,6 +1,7 @@
 package com.tongtu.tongtu.security;
 
 
+import com.tongtu.tongtu.data.DeviceRepository;
 import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.oss.OssUtils;
 import com.tongtu.tongtu.security.jwt.AuthenticationFilter;
@@ -37,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     private OssUtils ossUtils;
     private UserRepository userRepository;
+    private DeviceRepository deviceRepository;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -53,7 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 //.antMatchers("/creat/**","/like/**","/dislike/**","/user","/delete/**","/update/**","/comment/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/**","/").access("permitAll()")
-
                 .and().formLogin().loginProcessingUrl("/default/login").successHandler(new AuthenticationSuccessHandler() {
                     @Override
                     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
@@ -70,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     public AuthenticationFilter authenticationFilter() throws Exception {
-        AuthenticationFilter filter = new AuthenticationFilter(tokenProcessor(), ossUtils);
+        AuthenticationFilter filter = new AuthenticationFilter(tokenProcessor(), ossUtils,deviceRepository);
         filter.setAuthenticationManager(authenticationManagerBean());
         return filter;
     }

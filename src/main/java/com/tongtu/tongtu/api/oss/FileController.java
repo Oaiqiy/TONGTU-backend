@@ -39,7 +39,9 @@ public class FileController {
     @GetMapping("folders")
     public ResultInfo<List<String>> getFolders(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
         List<String> result = fileInfoRepository.findFileInfosByUser_Id(user.getId()).stream().map(FileInfo::getFolder).collect(Collectors.toList());
+
         if(result.isEmpty()){
             return new ResultInfo<>(1,"not have folders");
         }else{
@@ -147,6 +149,7 @@ public class FileController {
         return new ResultInfo<>(0,"success");
 
     }
+
 
     /**
      * 分页获取回收站信息

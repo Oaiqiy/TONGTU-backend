@@ -16,7 +16,7 @@ public interface DeviceRepository extends CrudRepository<Device,Long> {
      * @param id device id
      * @return a device if exists
      */
-    Device findDeviceById(Long id);
+    Device findDeviceByIdAndUser_Id(Long id,Long userId);
 
     /**
      * find devices by user id order by last login time
@@ -31,6 +31,13 @@ public interface DeviceRepository extends CrudRepository<Device,Long> {
      * @return a list of devices if exists
      */
     List<Device> findDevicesByUser_UsernameOrderByLastLoginAt(String username);
+
+    /**
+     * find device by uuid
+     * @param uuid uuid
+     * @return one device
+     */
+    Device findDeviceByUuid(String uuid);
 
     /**
      * delete device by id and user id
@@ -60,6 +67,15 @@ public interface DeviceRepository extends CrudRepository<Device,Long> {
     @Query(value = "update Device set alias = ?2 where id = ?1")
     void updateAlias(Long id,String alias);
 
+    /**
+     * update device's last login date by uuid
+     * @param uuid uuid
+     * @param lastLoginAt current date
+     */
+    @Transactional
+    @Modifying
+    @Query(value = "update Device set lastLoginAt = ?2 where uuid = ?1")
+    void updateLastLoginAt(String uuid, Date lastLoginAt);
 
 
 }

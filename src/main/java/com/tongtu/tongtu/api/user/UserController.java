@@ -26,12 +26,12 @@ public class UserController {
      */
     @GetMapping("/token/{id}")
     public ResultInfo<String> refreshToken(@PathVariable Long id){
-        if(deviceRepository.findDeviceById(id)==null){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        if(deviceRepository.findDeviceByIdAndUser_Id(id,user.getId())==null){
             return new ResultInfo<>(1,"deleted device","Please login again");
         }
         deviceRepository.updateLastLoginAt(id,new Date());
-        return new ResultInfo<>(0,"success",tokenProcessor.createToken(
-                SecurityContextHolder.getContext().getAuthentication().getName()));
+        return new ResultInfo<>(0,"success",tokenProcessor.createToken(user.getUsername()));
     }
 
 

@@ -3,6 +3,7 @@ package com.tongtu.tongtu.security.jwt;
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tongtu.tongtu.api.ResultInfo;
+import com.tongtu.tongtu.data.DeviceRepository;
 import com.tongtu.tongtu.oss.OssUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,14 +32,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private TokenProcessor tokenProcessor;
     private OssUtils ossUtils;
+    private DeviceRepository deviceRepository;
 
 
 
 
-    public AuthenticationFilter(TokenProcessor tokenProcessor, OssUtils ossUtils) {
+    public AuthenticationFilter(TokenProcessor tokenProcessor, OssUtils ossUtils, DeviceRepository deviceRepository) {
 
         this.tokenProcessor = tokenProcessor;
         this.ossUtils = ossUtils;
+        this.deviceRepository = deviceRepository;
         this.setFilterProcessesUrl("/user/login");
     }
 
@@ -68,8 +72,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         
                     response.setHeader("error", "2");
-                   
-
                     throw new DisabledException("");
                 }
                 
@@ -97,6 +99,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        ResultInfo<Map> resultInfo;
+
+        if(request.getHeader("uuid") != null){
+            deviceRepository.updateLastLoginAt(request.getHeader("uuid"),new Date());
+            resultInfo = new ResultInfo<>(0,"login success");
+        }
+
+        else
+            resultInfo = new ResultInfo<>(4,"need uuid");
 
 
 
@@ -104,6 +115,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         //发起请求，并得到响应。
         AssumeRoleResponse assumeRoleResponse;
         try {
+
             assumeRoleResponse = ossUtils.getOssToken();
 
         } catch (Exception e){
@@ -118,7 +130,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         data.put("sts",assumeRoleResponse.getCredentials());
 
 
-        ResultInfo<Map> resultInfo = new ResultInfo<Map>(0,"login success");
+
+
         resultInfo.setData(data);
         ObjectMapper om = new ObjectMapper();
 
@@ -135,9 +148,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json;charset=UTF-8");
         
         if (response.getHeader("error")!= null) {
+
            response.getWriter().append("{\"code\":2,\"msg\":\"Email is not enabled\"}");
-
-
 
         }
         else   
