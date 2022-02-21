@@ -20,7 +20,7 @@ public class UserController {
    private DeviceRepository deviceRepository;
 
     /**
-     * 重新获取token，并更新设备信息,当设备已经被删除时，不再获取token
+     * 重新获取token，并更新设备信息,当设备已经被删除时，不再获取token (token)
      * @param id 设备id
      * @return 成功返回token，失败返回错误信息
      */
@@ -36,7 +36,7 @@ public class UserController {
 
 
     /**
-     * 获取用户信息
+     * 获取用户信息 (token)
      * @return 返回用户信息
      */
     @GetMapping

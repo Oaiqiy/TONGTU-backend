@@ -18,7 +18,7 @@ public class UploadController {
     private final RabbitTemplate rabbitTemplate;
 
     /**
-     * upload control
+     * upload control (token)
      * @param size the size of uploading file
      * @param MD5 the file's MD5 code
      * @return if code equals 0,success else error

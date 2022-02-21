@@ -24,12 +24,15 @@ public class PreUpload {
     @SendTo("upload")
     public Boolean preUpload(@NotNull Map<String,String> message){
 
-
-        if(message.get("name")==null){
+        String username = message.get("name");
+        if(username==null){
             return false;
         }
 
-        User user = userRepository.findUserByUsername(message.get("name"));
+        User user = userRepository.findUserByUsername(username);
+        if(user == null)
+            return false;
+
         Long usedStorage = user.getUsedStorage();
         String id = user.getId().toString();
         System.out.println(usedStorage);

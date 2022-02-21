@@ -24,7 +24,7 @@ public class SecurityController {
     private TokenProcessor tokenProcessor;
 
     /**
-     * 获取oss token
+     * 获取oss token (token)
      * @param token 路径中传入登录token
      * @return 返回信息由阿里云处理
      */

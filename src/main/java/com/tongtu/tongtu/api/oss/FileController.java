@@ -31,7 +31,7 @@ public class FileController {
     private OSS oss;
 
     /**
-     * 获取用户分组信息
+     * 获取用户分组信息 (token)
      * @return if user has folders, return a list of folders <br>
      *         else return code 1 msg not have folders
      */
@@ -51,7 +51,7 @@ public class FileController {
     }
 
     /**
-     * 分页获取用户文件信息
+     * 分页获取用户文件信息 (token)
      * @param size page size
      * @param page page num from zero
      * @return if request successfully, return file counts and file infos.<br>
@@ -71,7 +71,7 @@ public class FileController {
     }
 
     /**
-     * 分页，分组获取文件信息
+     * 分页，分组获取文件信息 (token)
      * @param size page size
      * @param page page num from 0
      * @param folder folder name
@@ -92,7 +92,7 @@ public class FileController {
     }
 
     /**
-     * 删除文件
+     * 删除文件 (token)
      * @param device_id device id
      * @param file_id file id
      * @return if recycle bin is full return code 1 <br>
@@ -125,7 +125,7 @@ public class FileController {
     }
 
     /**
-     * 强制删除文件
+     * 强制删除文件 (token)
      * @param file_id file id
      * @return if file doesn't exist, return code 1
      */
@@ -152,7 +152,7 @@ public class FileController {
 
 
     /**
-     * 分页获取回收站信息
+     * 分页获取回收站信息 (token)
      * @param size page size
      * @param page page num from zero
      * @return if request successfully, return file counts and file infos.<br>
@@ -172,7 +172,7 @@ public class FileController {
     }
 
     /**
-     * 删除回收站中的文件
+     * 删除回收站中的文件 (token)
      * @param id file id
      * @return if success, return 0.
      */
@@ -199,7 +199,7 @@ public class FileController {
     }
 
     /**
-     * 清空回收站
+     * 清空回收站 (token)
      * @return code 0
      */
 
@@ -220,7 +220,7 @@ public class FileController {
     }
 
     /**
-     * 恢复回收站中的文件
+     * 恢复回收站中的文件 (token)
      * @param id file id
      * @return success
      */

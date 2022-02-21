@@ -22,7 +22,7 @@ public class DeviceController {
 
 
     /**
-     * 新增设备时使用
+     * 新增设备时使用 (token)
      * @param deviceInfo json includes uuid name type
      * @return if success
      */
@@ -45,7 +45,7 @@ public class DeviceController {
 
 
     /**
-     * 获取用户全部设备信息
+     * 获取用户全部设备信息 (token)
      * @return device list
      */
 
@@ -58,7 +58,7 @@ public class DeviceController {
     }
 
     /**
-     * 通过id删除设备使设备不能再次获取token
+     * 通过id删除设备使设备不能再次获取token (token)
      * @param data a json include "old" and optional "new"<br>
      *             if include "new" the files uploaded by "old" device will be transformed to "new" device<br>
      *             if not include "new" the files uploaded by "old" will be deleted<br>
@@ -84,7 +84,7 @@ public class DeviceController {
     }
 
     /**
-     * 重命名设备
+     * 重命名设备 (token)
      * @param id device id
      * @param alias device alias
      * @return if success

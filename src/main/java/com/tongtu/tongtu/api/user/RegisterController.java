@@ -41,8 +41,6 @@ public class RegisterController {
         registerForm.setUri(request.getScheme()+"://"+request.getServerName());
 
 
-
-
         try {
             //verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
             rabbitTemplate.convertAndSend("test",registerForm);
