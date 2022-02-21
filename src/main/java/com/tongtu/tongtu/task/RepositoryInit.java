@@ -15,6 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * test file, generate test database
+ */
+
 @Slf4j
 @Component
 public class RepositoryInit {

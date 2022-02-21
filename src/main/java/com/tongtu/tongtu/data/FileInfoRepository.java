@@ -11,9 +11,16 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * table name file_info
+ * native query:
+ * {@link #findFoldersByUser_Id}
+ */
+
 public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
 
-    // SELECT
+    // READ
 
     /**
      * find file infos by user's id
@@ -54,6 +61,18 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
      */
     Page<FileInfo> findFileInfosByUser_IdAndDeleted(Long id, Boolean deleted,Pageable pageable);
 
+
+    /**
+     * *nativeQuery*
+     * find user's folders by user id
+     * @param id user id
+     * @return a list of folders' name
+     */
+    @Query(value = "select distinct file_info.folder from file_info where file_info.user_id = ?1",nativeQuery = true)
+    List<String> findFoldersByUser_Id(Long id);
+
+
+
     /**
      * find file infos by user's id and if deleted and folder
      * @param id user's id
@@ -64,29 +83,6 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
      */
     Page<FileInfo> findFileInfosByUser_IdAndDeletedAndFolder(Long id,Boolean deleted,String folder,Pageable pageable);
 
-    //DELETE
-
-    /**
-     * delete file infos by the delete time
-     * @param date delete time
-     */
-    @Transactional
-    void deleteFileInfosByDeletedFile_CreatedAtLessThan(Date date);
-
-    /**
-     * delete file info by file's id
-     * @param fileId file's id
-     */
-    @Transactional
-    void deleteFileInfoById(Long fileId);
-
-    /**
-     * delete file infos by user's id and if deleted
-     * @param id user's id
-     * @param deleted if deleted
-     */
-    @Transactional
-    void deleteFileInfosByUser_IdAndDeleted(Long id,Boolean deleted);
 
     //UPDATE
 
@@ -119,6 +115,31 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
     @Transactional
     @Query(value = "update FileInfo set deleted = ?3 where id = ?1 and user.id = ?2")
     void updateFileInfoDeletedByFileInfoIdAndUserId(Long fileId,Long userId,Boolean deleted);
+
+
+    //DELETE
+
+    /**
+     * delete file infos by the delete time
+     * @param date delete time
+     */
+    @Transactional
+    void deleteFileInfosByDeletedFile_CreatedAtLessThan(Date date);
+
+    /**
+     * delete file info by file's id
+     * @param fileId file's id
+     */
+    @Transactional
+    void deleteFileInfoById(Long fileId);
+
+    /**
+     * delete file infos by user's id and if deleted
+     * @param id user's id
+     * @param deleted if deleted
+     */
+    @Transactional
+    void deleteFileInfosByUser_IdAndDeleted(Long id,Boolean deleted);
 
 
 

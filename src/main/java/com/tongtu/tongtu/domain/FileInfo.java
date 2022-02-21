@@ -11,6 +11,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor(force = true)
+@Table(name = "file_info")
 public class FileInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

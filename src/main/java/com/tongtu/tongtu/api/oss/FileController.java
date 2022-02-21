@@ -40,7 +40,7 @@ public class FileController {
     public ResultInfo<List<String>> getFolders(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        List<String> result = fileInfoRepository.findFileInfosByUser_Id(user.getId()).stream().map(FileInfo::getFolder).collect(Collectors.toList());
+        List<String> result = fileInfoRepository.findFoldersByUser_Id(user.getId());
 
         if(result.isEmpty()){
             return new ResultInfo<>(1,"not have folders");

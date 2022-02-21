@@ -19,6 +19,9 @@ public class CheckRecycleBin {
     private final FileInfoRepository fileInfoRepository;
 
 
+    /**
+     * according to cron time to delete expired recycled file
+     */
     @Scheduled(cron = "* 0 * * * *")
     public void deleteExpired(){
 
