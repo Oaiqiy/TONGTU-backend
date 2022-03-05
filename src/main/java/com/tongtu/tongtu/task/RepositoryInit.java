@@ -9,10 +9,18 @@ import com.tongtu.tongtu.domain.Device;
 import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.transaction.Transactional;
 
 
 /**
@@ -23,7 +31,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RepositoryInit {
     @Bean
-    public CommandLineRunner init(FileInfoRepository fileInfoRepository, UserRepository userRepository, DeviceRepository deviceRepository, PasswordEncoder passwordEncoder){
+    @Transactional
+    public CommandLineRunner init(EntityManager entityManager,FileInfoRepository fileInfoRepository, UserRepository userRepository, DeviceRepository deviceRepository, PasswordEncoder passwordEncoder){
         return args -> {
 
             User mhl = new User("mhl",passwordEncoder.encode("mhl"),"mhl@tongtu.xyz");
@@ -49,19 +58,41 @@ public class RepositoryInit {
             device.setName("IPhone 12");
             deviceRepository.save(device);
 
-            FileInfo fileInfo = new FileInfo("file1","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            FileInfo fileInfo = new FileInfo("file_three","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
-            fileInfo = new FileInfo("file2","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            fileInfo = new FileInfo("file-two","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
-            fileInfo = new FileInfo("file3","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            fileInfo = new FileInfo("agoodfile","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
             fileInfo = new FileInfo("file4","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
+            fileInfoRepository.save(new FileInfo("一个文件","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file"));
 
+            fileInfoRepository.save(new FileInfo("两个文件","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file"));
+            fileInfoRepository.save(new FileInfo("三个文件","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file"));
+            fileInfoRepository.save(new FileInfo("四个文件","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file"));
+
+
+            var em = entityManager.getEntityManagerFactory().createEntityManager();
+            SearchSession searchSession = Search.session(em);
+
+            MassIndexer indexer = searchSession.massIndexer(FileInfo.class).threadsToLoadObjects(4);
+            System.out.println("start");
+            indexer.startAndWait();
+            System.out.println("end");
+
+            SearchResult<FileInfo> result = searchSession.search(FileInfo.class)
+                .where(f ->f.match().fields("name").matching("*file*")).fetch(2);
+
+            for(var x: result.hits()){
+                System.out.println(x.getName());
+            }
+
+            System.out.println("finish");
 
 
         };

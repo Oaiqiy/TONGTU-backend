@@ -88,11 +88,11 @@ public class ConnectTest {
         callback.addCallbackVar("test","ffff");
 
         putObjectRequest.setCallback(callback);
-//
-//        PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
-//        System.out.println("begin_______________________");
-//        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
-//        System.out.println(scanner.next());
+
+        PutObjectResult putObjectResult = oss.putObject(putObjectRequest);
+        System.out.println("begin_______________________");
+        Scanner scanner = new Scanner(putObjectResult.getResponse().getContent(),"UTF-8");
+        System.out.println(scanner.next());
 
     }
     @Test

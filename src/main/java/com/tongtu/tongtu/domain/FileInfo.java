@@ -3,6 +3,8 @@ package com.tongtu.tongtu.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,10 +14,12 @@ import java.util.Date;
 @Data
 @NoArgsConstructor(force = true)
 @Table(name = "file_info")
+@Indexed(index = "idx_file")
 public class FileInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @FullTextField
     private String name;
     private Date uploadAt;
     private FileType fileType;

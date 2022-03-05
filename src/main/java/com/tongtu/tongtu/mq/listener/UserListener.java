@@ -1,19 +1,17 @@
-package com.tongtu.tongtu.security;
+package com.tongtu.tongtu.mq.listener;
 
-import com.tongtu.tongtu.api.user.MailController;
 import com.tongtu.tongtu.api.user.RegisterForm;
+import com.tongtu.tongtu.security.VerificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @Slf4j
 @AllArgsConstructor
-public class UserRabbitListener {
+public class UserListener {
     private VerificationEmail verificationEmail;
 
     @RabbitListener(queues = "test")

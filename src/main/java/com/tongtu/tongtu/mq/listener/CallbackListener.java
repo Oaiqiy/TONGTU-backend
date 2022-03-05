@@ -1,4 +1,4 @@
-package com.tongtu.tongtu.oss;
+package com.tongtu.tongtu.mq.listener;
 
 import com.tongtu.tongtu.api.oss.CallbackForm;
 import com.tongtu.tongtu.data.FileInfoRepository;

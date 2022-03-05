@@ -16,18 +16,20 @@ public class CallbackForm {
     private String object;
     private int type;
     private Long size;
-    private Long user;
+    private String token;
     private Long device;
     private String description;
     private String MD5;
 
 
     public FileInfo toFileInfo(){
+
         String[] folderAndName = object.split("/");
+
         if(folderAndName.length==1)
-            return new FileInfo(folderAndName[0],null,size, FileInfo.FileType.values()[type],new User(user),new Device(device),description);
+            return new FileInfo(folderAndName[0],null,size, FileInfo.FileType.values()[type],new User(),new Device(device),description);
         else
-            return new FileInfo(folderAndName[1],folderAndName[0],size,FileInfo.FileType.values()[type],new User(user),new Device(device),description);
+            return new FileInfo(folderAndName[1],folderAndName[0],size,FileInfo.FileType.values()[type],new User(),new Device(device),description);
     }
 
 
