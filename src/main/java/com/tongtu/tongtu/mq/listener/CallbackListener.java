@@ -20,7 +20,7 @@ public class CallbackListener {
     @RabbitListener(queues = "callback")
     public void uploadCallback(CallbackForm callbackForm){
 
-        User user= userRepository.findUserById(callbackForm.getUser());
+        User user= userRepository.findUserByUsername(callbackForm.getAuth());
         user.uploadFile(callbackForm.getSize(), FileInfo.FileType.OTHER);
         userRepository.save(user);
         fileInfoRepository.save(callbackForm.toFileInfo());

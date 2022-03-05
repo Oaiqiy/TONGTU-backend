@@ -9,7 +9,9 @@ import com.tongtu.tongtu.domain.DeletedFile;
 import com.tongtu.tongtu.domain.Device;
 import com.tongtu.tongtu.domain.FileInfo;
 import com.tongtu.tongtu.domain.User;
+import com.tongtu.tongtu.mq.listener.DeleteForm;
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +30,8 @@ public class FileController {
     private FileInfoRepository fileInfoRepository;
     private DeletedFileRepository deletedFileRepository;
     private UserRepository userRepository;
-    private OSS oss;
+    private RabbitTemplate rabbitTemplate;
+
 
     /**
      * 获取用户分组信息 (token)
@@ -246,7 +249,9 @@ public class FileController {
             object.append(fileInfo.getFolder()).append("/");
         }
         object.append(fileInfo.getName());
-        oss.deleteObject(bucket,object.toString());
+
+        rabbitTemplate.convertAndSend("delete",new DeleteForm(bucket,object.toString()));
+
     }
 
 
