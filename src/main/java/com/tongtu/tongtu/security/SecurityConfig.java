@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 //.antMatchers("/creat/**","/like/**","/dislike/**","/user","/delete/**","/update/**","/comment/**").access("hasRole('ROLE_USER')")
-                .antMatchers("/user/register","/user/check","/user/check/**","/oss/callback").access("permitAll()")
+                .antMatchers("/user/register","/user/check","/user/check/**","/oss/callback","/oss/sts/**").access("permitAll()")
                 .antMatchers("/**","/").access("hasRole('ROLE_USER')")
                 .and().formLogin().loginProcessingUrl("/default/login").successHandler(new AuthenticationSuccessHandler() {
                     @Override

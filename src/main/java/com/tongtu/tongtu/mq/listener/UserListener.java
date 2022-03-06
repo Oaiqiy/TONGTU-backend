@@ -14,9 +14,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserListener {
     private VerificationEmail verificationEmail;
 
-    @RabbitListener(queues = "test")
+    @RabbitListener(queues = "register")
     public void sendRegisterMail(RegisterForm registerForm){
         try {
+            log.info("register: username: " + registerForm.getUsername() + " email: " + registerForm.getEmail());
+
             //System.out.println(MvcUriComponentsBuilder.fromMappingName("/user/check").arg(0, "ssda").build());
             UriComponentsBuilder.fromUriString(registerForm.getUri()).path("/user/check");
             verificationEmail.registerMail(registerForm.getUsername(), registerForm.getEmail(),UriComponentsBuilder.fromUriString(registerForm.getUri()).path("/user/check"));

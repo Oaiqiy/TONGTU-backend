@@ -102,7 +102,7 @@ public class ConnectTest {
 
     @Test
     public void callbackFormTest(){
-        CallbackForm callbackForm =new CallbackForm(123L,"afdsa", 1,3421L,1L,1L,"fa","fasdf");
+        CallbackForm callbackForm =new CallbackForm(123L,"afdsa", 1,3421L,"a",1L,"fa","fasdf");
         fileInfoRepository.save(callbackForm.toFileInfo());
     }
 }

@@ -43,7 +43,7 @@ public class RegisterController {
 
         try {
             //verificationEmail.registerMail(registerForm.getUsername(),registerForm.getEmail());
-            rabbitTemplate.convertAndSend("test",registerForm);
+            rabbitTemplate.convertAndSend("register",registerForm);
         }catch (Exception e){
             return new ResultInfo<>(1,"邮件发送失败！");
         }
