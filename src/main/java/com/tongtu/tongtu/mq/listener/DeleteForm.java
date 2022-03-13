@@ -2,15 +2,18 @@ package com.tongtu.tongtu.mq.listener;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
 
-@AllArgsConstructor
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DeleteForm {
     @NotNull
-    private final String bucket;
+    private String bucket;
     @NotNull
-    private final String object;
+    private String object;
 }

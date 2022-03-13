@@ -22,11 +22,20 @@ public class OssConfig {
         this.ossProperties=ossProperties;
     }
 
+    /**
+     * create an OSS bean, used to process OSS operation.
+     * @return OSSClient Bean
+     */
     @Bean
     public OSS oss(){
         return new OSSClientBuilder().build(ossProperties.getEndpoint(),ossProperties.getAccessKeyId(),ossProperties.getAccessKeySecret());
     }
 
+
+    /**
+     * crate an IAcsClient to generate STS data.
+     * @return IAcsClient Bean
+     */
     @Bean
     public IAcsClient iAcsClient(){
         DefaultProfile profile = DefaultProfile.getProfile("cn-beijing",ossProperties.getAccessKeyId(),ossProperties.getAccessKeySecret());

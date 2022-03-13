@@ -45,6 +45,8 @@ public class UploadController {
     @GetMapping("/upload")
     @Transactional
     public ResultInfo<Object> preUpload(Long size,String MD5,Long id){
+        if(size <= 0)
+            return new ResultInfo<>(3,"empty file");
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
@@ -61,7 +63,7 @@ public class UploadController {
 
 
         if(code == null)
-            return new ResultInfo<>(3,"unknown error");
+            return new ResultInfo<>(10,"unknown error");
         else if(code == 0)
             return new ResultInfo<>(0,"success");
         else if(code == 1)
@@ -69,7 +71,7 @@ public class UploadController {
         else if(code == 2)
             return new ResultInfo<>(2,"repeated file");
         else
-            return new ResultInfo<>(3,"unknown error");
+            return new ResultInfo<>(10,"unknown error");
 
 
     }

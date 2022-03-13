@@ -100,9 +100,9 @@ public class ConnectTest {
         oss.deleteObject("examplesbucket","test.txt");
     }
 
-    @Test
-    public void callbackFormTest(){
-        CallbackForm callbackForm =new CallbackForm(123L,"afdsa", 1,3421L,"a",1L,"fa","fasdf");
-        fileInfoRepository.save(callbackForm.toFileInfo());
-    }
+//    @Test
+//    public void callbackFormTest(){
+//        CallbackForm callbackForm =new CallbackForm(123L,"afdsa", 1,3421L,"a",1L,"fa","fasdf");
+//        fileInfoRepository.save(callbackForm.toFileInfo(new User()));
+//    }
 }

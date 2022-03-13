@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * deleted file information, one-to-one link to {@link FileInfo}
+ */
+
 @Data
 @Entity
 @NoArgsConstructor(force = true)
@@ -18,10 +22,13 @@ public class DeletedFile{
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "deletedFile")
     private FileInfo fileInfo;
+
+
     private Date createdAt;
 
     @ManyToOne
     private Device deletingDevice;
+
 
 
     @PrePersist

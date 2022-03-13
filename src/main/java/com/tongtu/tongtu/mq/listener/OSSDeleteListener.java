@@ -13,9 +13,17 @@ import org.springframework.stereotype.Component;
 public class OSSDeleteListener {
     private final OSS oss;
 
+    /**
+     * listener to delete file in OSS.
+     * @param deleteForm all attribute should be not null
+     */
     @RabbitListener(queues = "delete")
     public void deleteFile(DeleteForm deleteForm){
+
         log.info("delete: " + deleteForm.getBucket() + " : " + deleteForm.getObject());
+
+        if(deleteForm.getBucket()==null)
+            return;
 
         oss.deleteObject(deleteForm.getBucket(),deleteForm.getObject());
     }

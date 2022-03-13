@@ -31,26 +31,32 @@ public class CallbackController {
                 throw new CallbackException(1,"Missing verification");
 
             String username = tokenProcessor.decodeToken(callbackForm.getAuth());
+            callbackForm.setAuth(username);
+
 
             if(username == null)
                 throw new CallbackException(2,"Missing verification");
+            if(callbackForm.getMD5() == null)
+                throw new CallbackException(4,"Missing MD5");
 
-            String size = (String) redisTemplate.opsForHash().get(username+":files",callbackForm.getMD5());
+            String size = (String) redisTemplate.opsForHash().get(username+':'+callbackForm.getDevice()+":files",callbackForm.getMD5());
 
             if(size == null)
                 throw new CallbackException(3,"No file info");
 
-            callbackForm.setAuth(username);
+
 
             if(callbackForm.getTarget()!=null)
                 rabbitTemplate.convertAndSend("notice",callbackForm);
+
 
             rabbitTemplate.convertAndSend("callback",callbackForm);
 
             return new ResultInfo<>(0, "success");
 
         } catch (CallbackException e) {
-            rabbitTemplate.convertAndSend("delete",callbackForm.toDeleteForm());
+            if(callbackForm.getObject()!=null)
+                rabbitTemplate.convertAndSend("delete",callbackForm.toDeleteForm());
             return e.toResultInfo();
         }
 

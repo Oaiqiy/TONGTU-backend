@@ -14,6 +14,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserListener {
     private VerificationEmail verificationEmail;
 
+
+    /**
+     * listener to process user register data, send verification email to user.
+     * @param registerForm register form
+     */
     @RabbitListener(queues = "register")
     public void sendRegisterMail(RegisterForm registerForm){
         try {

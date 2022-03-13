@@ -16,6 +16,12 @@ public class OssUtils {
         this.iAcsClient=iAcsClient;
     }
 
+
+    /**
+     * generate STS token
+     * @return STS token data
+     * @throws Exception when get token failure
+     */
     public AssumeRoleResponse getOssToken() throws Exception{
 
         AssumeRoleRequest assumeRoleRequest = new AssumeRoleRequest();

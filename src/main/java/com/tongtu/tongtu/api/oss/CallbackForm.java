@@ -7,7 +7,9 @@ import com.tongtu.tongtu.mq.listener.DeleteForm;
 import com.tongtu.tongtu.mq.listener.OSSDeleteListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.tomcat.util.security.MD5Encoder;
+import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -16,6 +18,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CallbackForm {
     /** target device */
     private Long target;
@@ -42,19 +45,20 @@ public class CallbackForm {
     private String MD5;
 
 
-    public FileInfo toFileInfo(){
+    public FileInfo toFileInfo(User user){
 
         String[] folderAndName = object.split("/");
 
 
         if(folderAndName.length==1)
-            return new FileInfo(folderAndName[0],null,size, FileInfo.FileType.values()[type],new User(auth),new Device(device),description);
+            return new FileInfo(folderAndName[0],null,size, FileInfo.FileType.values()[type],user,new Device(device),description);
         else
-            return new FileInfo(folderAndName[1],folderAndName[0],size,FileInfo.FileType.values()[type],new User(auth),new Device(device),description);
+            return new FileInfo(folderAndName[1],folderAndName[0],size,FileInfo.FileType.values()[type],user,new Device(device),description);
     }
 
     public DeleteForm toDeleteForm(){
-        return new DeleteForm(MD5Encoder.encode(auth.getBytes(StandardCharsets.UTF_8)),object);
+
+        return new DeleteForm(DigestUtils.md5DigestAsHex(auth.getBytes(StandardCharsets.UTF_8)),object);
     }
 
 

@@ -16,6 +16,7 @@ import java.util.Map;
 @Component
 @AllArgsConstructor
 @Slf4j
+@Deprecated
 public class PreUpload {
     private UserRepository userRepository;
     private RedisTemplate<String,String> redisTemplate;

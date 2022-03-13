@@ -12,7 +12,7 @@ if redis.call("GET", temp) == true then
     uploading = redis.call("GET",temp)
 end
 
-if(redis.call("HEXISTS",files,MD5) == true) then
+if(redis.call("HEXISTS",files,MD5) == 1) then
     return 2
 end
 

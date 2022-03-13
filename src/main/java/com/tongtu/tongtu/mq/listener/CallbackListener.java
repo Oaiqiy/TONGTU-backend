@@ -11,8 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+
 
 @Component
 @AllArgsConstructor
@@ -20,7 +19,12 @@ public class CallbackListener {
     private UserRepository userRepository;
     private FileInfoRepository fileInfoRepository;
     private RedisTemplate<String,String> redisTemplate;
-    private EntityManager entityManager;
+
+
+    /**
+     * message queue listener,which processes callback data, persist in database
+     * @param callbackForm checked callback form
+     */
 
 
     @RabbitListener(queues = "callback")
@@ -40,7 +44,9 @@ public class CallbackListener {
         redisTemplate.opsForHash().delete(files,callbackForm.getMD5());
         redisTemplate.opsForValue().increment(temp,-callbackForm.getSize());
 
-        fileInfoRepository.save(callbackForm.toFileInfo());
+        fileInfoRepository.save(callbackForm.toFileInfo(user));
+
+        //TODO: send message
 
     }
 }

@@ -10,6 +10,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+
+/**
+ * core file info. </br>
+ * {@link FileInfo#folder} only support one level folder.
+ */
+
+
 @Entity
 @Data
 @NoArgsConstructor(force = true)
@@ -19,11 +26,13 @@ public class FileInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @FullTextField
     private String name;
     private Date uploadAt;
     private FileType fileType;
     private Long size;
+
     private String folder;
     private String description;
     private Boolean deleted = false;

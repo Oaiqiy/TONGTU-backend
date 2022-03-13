@@ -112,6 +112,7 @@ public class FileController {
         if(user.getUsedRecycleStorage()+fileInfo.getSize()> user.getRecycleStorage()){
             return new ResultInfo<>(2,"recycle bin is full");
         }
+
 //        user.addRecycle(fileInfo.getSize());
 //        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
 //        userRepository.save(user);
@@ -142,17 +143,16 @@ public class FileController {
         if(fileInfo==null)
             return new ResultInfo<>(1,"no such file");
 
-        //TODO: mq
+
         fileInfoRepository.deleteFileInfoById(file_id);
-//        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
-//        userRepository.save(user);
         userRepository.updateUsedStorage(fileInfo.getSize(),user.getId());
         deleteFileInOSS(user, fileInfo);
+
+
 
         return new ResultInfo<>(0,"success");
 
     }
-
 
     /**
      * 分页获取回收站信息 (token)
