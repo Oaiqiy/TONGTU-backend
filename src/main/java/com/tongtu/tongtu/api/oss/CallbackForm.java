@@ -57,7 +57,6 @@ public class CallbackForm {
     }
 
     public DeleteForm toDeleteForm(){
-
         return new DeleteForm(DigestUtils.md5DigestAsHex(auth.getBytes(StandardCharsets.UTF_8)),object);
     }
 

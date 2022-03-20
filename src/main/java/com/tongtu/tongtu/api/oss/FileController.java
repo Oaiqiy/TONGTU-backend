@@ -3,6 +3,7 @@ package com.tongtu.tongtu.api.oss;
 import com.aliyun.oss.OSS;
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.DeletedFileRepository;
+import com.tongtu.tongtu.data.DeviceRepository;
 import com.tongtu.tongtu.data.FileInfoRepository;
 import com.tongtu.tongtu.data.UserRepository;
 import com.tongtu.tongtu.domain.DeletedFile;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,6 +33,7 @@ public class FileController {
     private DeletedFileRepository deletedFileRepository;
     private UserRepository userRepository;
     private RabbitTemplate rabbitTemplate;
+    private DeviceRepository deviceRepository;
 
 
     /**
@@ -44,6 +47,13 @@ public class FileController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
         List<String> result = fileInfoRepository.findFoldersByUser_Id(user.getId());
+
+        for(int i = 0;i < result.size();i++){
+            if(result.get(i) == null){
+                result.remove(i);
+                break;
+            }
+        }
 
         if(result.isEmpty()){
             return new ResultInfo<>(1,"not have folders");
@@ -106,6 +116,7 @@ public class FileController {
     public ResultInfo<String> deleteFile(@PathVariable Long device_id,@PathVariable Long file_id){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
         FileInfo fileInfo = fileInfoRepository.findFileInfoByIdAndUser_Id(file_id,user.getId());
+
         if(fileInfo == null){
             return new ResultInfo<>(1,"no such file");
         }
@@ -120,11 +131,18 @@ public class FileController {
         userRepository.updateUsedRecycleStorage(fileInfo.getSize(), user.getId());
         userRepository.updateUsedStorage(-fileInfo.getSize(), user.getId());
 
-        fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(file_id,user.getId(),true);
+
         DeletedFile deletedFile = new DeletedFile();
         deletedFile.setId(file_id);
-        deletedFile.setDeletingDevice(new Device(device_id));
+        Optional<Device> device = deviceRepository.findById(device_id);
+        if(device.isPresent())
+            deletedFile.setDeletingDevice(device.get());
+        else
+            return new ResultInfo<>(3,"no such device");
+
         deletedFileRepository.save(deletedFile);
+
+        fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(file_id,user.getId(),true);
         return new ResultInfo<>(0,"zero forever");
     }
 

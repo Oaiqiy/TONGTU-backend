@@ -58,7 +58,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
      */
     @Transactional
     @Modifying
-    @Query("update User set usedRecycleStorage = usedRecycleStorage + ?2 where id = ?2")
+    @Query("update User set usedRecycleStorage = usedRecycleStorage + ?1 where id = ?2")
     void updateUsedRecycleStorage(Long size,Long id);
 
 

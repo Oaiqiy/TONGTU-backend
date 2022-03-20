@@ -23,7 +23,6 @@ public class TongtuApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext app = SpringApplication.run(TongtuApplication.class, args);
-
 	}
 
 }

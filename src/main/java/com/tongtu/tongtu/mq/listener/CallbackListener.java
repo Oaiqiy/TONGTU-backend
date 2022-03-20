@@ -31,18 +31,20 @@ public class CallbackListener {
     @Transactional
     public void  uploadCallback(CallbackForm callbackForm){
 
+        String files = callbackForm.getAuth()+":" + callbackForm.getDevice()+ ":files";
+        long count = redisTemplate.opsForHash().delete(files,callbackForm.getMD5());
+        if(count == 0)
+            return;
+
+        String temp = callbackForm.getAuth()+":temp";
+        redisTemplate.opsForValue().increment(temp,-callbackForm.getSize());
 
         User user= userRepository.findUserByUsername(callbackForm.getAuth());
 
 
-        user.uploadFile(callbackForm.getSize(), FileInfo.FileType.OTHER);
+        user.uploadFile(callbackForm.getSize(), FileInfo.FileType.values()[callbackForm.getType()]);
         userRepository.save(user);
 
-        String files = callbackForm.getAuth()+":" + callbackForm.getDevice()+ ":files";
-        String temp = callbackForm.getAuth()+":temp";
-
-        redisTemplate.opsForHash().delete(files,callbackForm.getMD5());
-        redisTemplate.opsForValue().increment(temp,-callbackForm.getSize());
 
         fileInfoRepository.save(callbackForm.toFileInfo(user));
 

@@ -13,6 +13,7 @@ import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
 import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,10 +31,14 @@ import javax.transaction.Transactional;
 @Slf4j
 @Component
 public class RepositoryInit {
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    String ddl;
+
     @Bean
     @Transactional
     public CommandLineRunner init(EntityManager entityManager,FileInfoRepository fileInfoRepository, UserRepository userRepository, DeviceRepository deviceRepository, PasswordEncoder passwordEncoder){
         return args -> {
+
 
             User mhl = new User("mhl",passwordEncoder.encode("mhl"),"mhl@tongtu.xyz");
             mhl.setVerified(true);
@@ -51,11 +56,17 @@ public class RepositoryInit {
             Device device = new Device();
             device.setUser(new User(1L));
             device.setName("HUAWEI P30");
+            device.setType("phone");
+            device.setUuid("mhl222sb");
+            device.setAlias("mhl的红米开");
             deviceRepository.save(device);
 
             device = new Device();
             device.setUser(new User(1L));
             device.setName("IPhone 12");
+            device.setType("phone");
+            device.setUuid("mhl111sb");
+            device.setAlias("西瓜皮");
             deviceRepository.save(device);
 
             FileInfo fileInfo = new FileInfo("file_three","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
