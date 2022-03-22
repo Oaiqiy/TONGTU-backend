@@ -96,4 +96,21 @@ public class DeviceController {
         return new ResultInfo<>(0,"updated");
     }
 
+    /**
+     * update device login time
+     * @param id device id
+     * @return 0 if success, 1 if user doesn't have this device
+     * <p>if return 1, client should delete auth data!</p>
+     */
+    @GetMapping("/login/{id}")
+    @Deprecated
+    public ResultInfo<String> login(@PathVariable Long id){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if(deviceRepository.updateLastLoginAt(id,user.getId(),new Date()) == 1)
+            return new ResultInfo<>(0,"success");
+        else
+            return new ResultInfo<>(1,"no such device");
+    }
+
 }

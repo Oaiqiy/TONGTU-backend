@@ -54,8 +54,8 @@ public interface DeviceRepository extends CrudRepository<Device,Long> {
      */
     @Transactional
     @Modifying
-    @Query(value = "update Device set lastLoginAt = ?2 where id = ?1")
-    void updateLastLoginAt(Long id, Date date);
+    @Query(value = "update Device set lastLoginAt = ?3 where id = ?1 and user.id = ?2")
+    int updateLastLoginAt(Long id, Long userId, Date date);
 
     /**
      * update device alias

@@ -1,6 +1,6 @@
 package com.tongtu.tongtu.api.oss;
 
-import com.aliyun.oss.OSS;
+
 import com.tongtu.tongtu.api.ResultInfo;
 import com.tongtu.tongtu.data.DeletedFileRepository;
 import com.tongtu.tongtu.data.DeviceRepository;
@@ -19,11 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
-
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/oss/file")
@@ -61,6 +60,19 @@ public class FileController {
             return new ResultInfo<>(0,Integer.toString(result.size()),result);
         }
 
+    }
+
+    /**
+     * update a file's folder
+     * @param id file id
+     * @param folder new folder name
+     * @return 0 forever
+     */
+    @PostMapping("update/folder/{id}/{folder}")
+    public ResultInfo<String> updateFolder(@PathVariable Long id, @PathVariable String folder){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        fileInfoRepository.updateFolderByID(folder,id,user.getId());
+        return new ResultInfo<>(0,"success");
     }
 
     /**
@@ -124,9 +136,6 @@ public class FileController {
             return new ResultInfo<>(2,"recycle bin is full");
         }
 
-//        user.addRecycle(fileInfo.getSize());
-//        user.deleteFile(fileInfo.getSize(),fileInfo.getFileType());
-//        userRepository.save(user);
 
         userRepository.updateUsedRecycleStorage(fileInfo.getSize(), user.getId());
         userRepository.updateUsedStorage(-fileInfo.getSize(), user.getId());
@@ -165,8 +174,6 @@ public class FileController {
         fileInfoRepository.deleteFileInfoById(file_id);
         userRepository.updateUsedStorage(fileInfo.getSize(),user.getId());
         deleteFileInOSS(user, fileInfo);
-
-
 
         return new ResultInfo<>(0,"success");
 
