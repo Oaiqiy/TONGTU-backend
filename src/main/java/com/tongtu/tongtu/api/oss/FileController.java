@@ -16,6 +16,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class FileController {
     private UserRepository userRepository;
     private RabbitTemplate rabbitTemplate;
     private DeviceRepository deviceRepository;
+    private RedisTemplate<String,String> redisTemplate;
 
 
     /**
@@ -63,15 +65,16 @@ public class FileController {
     }
 
     /**
-     * update a file's folder
+     * update a file's folder (token)
      * @param id file id
      * @param folder new folder name
      * @return 0 forever
      */
+
     @PostMapping("update/folder/{id}/{folder}")
     public ResultInfo<String> updateFolder(@PathVariable Long id, @PathVariable String folder){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        fileInfoRepository.updateFolderByID(folder,id,user.getId());
+        fileInfoRepository.updateFolderById(folder,id,user.getId());
         return new ResultInfo<>(0,"success");
     }
 
@@ -137,9 +140,10 @@ public class FileController {
         }
 
 
+        // Update used size
+        updateUsedSize(user,-fileInfo.getSize());
         userRepository.updateUsedRecycleStorage(fileInfo.getSize(), user.getId());
-        userRepository.updateUsedStorage(-fileInfo.getSize(), user.getId());
-
+//        userRepository.updateUsedStorage(-fileInfo.getSize(), user.getId());
 
         DeletedFile deletedFile = new DeletedFile();
         deletedFile.setId(file_id);
@@ -148,10 +152,10 @@ public class FileController {
             deletedFile.setDeletingDevice(device.get());
         else
             return new ResultInfo<>(3,"no such device");
-
         deletedFileRepository.save(deletedFile);
 
         fileInfoRepository.updateFileInfoDeletedByFileInfoIdAndUserId(file_id,user.getId(),true);
+
         return new ResultInfo<>(0,"zero forever");
     }
 
@@ -172,7 +176,7 @@ public class FileController {
 
 
         fileInfoRepository.deleteFileInfoById(file_id);
-        userRepository.updateUsedStorage(fileInfo.getSize(),user.getId());
+        updateUsedSize(user,-fileInfo.getSize());
         deleteFileInOSS(user, fileInfo);
 
         return new ResultInfo<>(0,"success");
@@ -213,15 +217,13 @@ public class FileController {
             return new ResultInfo<>(1,"no such files");
         if(!deletedFileRepository.existsById(id))
             return new ResultInfo<>(2,"not deleted");
+
+        // Delete in Database
         deletedFileRepository.deleteById(id);
         fileInfoRepository.deleteFileInfoById(id);
-
         deleteFileInOSS(user, fileInfo);
-
         userRepository.updateUsedRecycleStorage(fileInfo.getSize(),user.getId());
 
-//        user.deleteRecycle(fileInfo.getSize());
-//        userRepository.save(user);
 
         return new ResultInfo<>(0,"success");
     }
@@ -267,6 +269,27 @@ public class FileController {
         return new ResultInfo<>(0,"success");
     }
 
+    /**
+     * update user's used size in both MySQL and Redis
+     * @param user user
+     * @param size update size
+     */
+    public void updateUsedSize(User user, Long size){
+        String userSizeKey = user.getUsername()+":size";
+        String sizeInRedis = redisTemplate.opsForValue().get(userSizeKey);
+
+        if(sizeInRedis != null)
+            redisTemplate.opsForValue().increment(userSizeKey,size);
+
+        userRepository.updateUsedStorage(size,user.getId());
+
+    }
+
+    /**
+     * delete file in oss, this method will send a message to queue [delete]
+     * @param user user
+     * @param fileInfo deleted file
+     */
     public void deleteFileInOSS(User user, FileInfo fileInfo) {
         String bucket = DigestUtils.md5DigestAsHex(user.getUsername().getBytes(StandardCharsets.UTF_8));
         StringBuilder object = new StringBuilder();
