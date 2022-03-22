@@ -36,15 +36,14 @@ public class CallbackListener {
         if(count == 0)
             return;
 
-        String temp = callbackForm.getAuth()+":temp";
-        redisTemplate.opsForValue().increment(temp,-callbackForm.getSize());
+        String username = callbackForm.getAuth();
+        long size = callbackForm.getSize();
+        redisTemplate.opsForValue().increment(username+":used",size);
+        redisTemplate.opsForValue().increment(username+":temp",-size);
 
-        User user= userRepository.findUserByUsername(callbackForm.getAuth());
-
-
-        user.uploadFile(callbackForm.getSize(), FileInfo.FileType.values()[callbackForm.getType()]);
+        User user= userRepository.findUserByUsername(username);
+        user.uploadFile(size, FileInfo.FileType.values()[callbackForm.getType()]);
         userRepository.save(user);
-
 
         fileInfoRepository.save(callbackForm.toFileInfo(user));
 

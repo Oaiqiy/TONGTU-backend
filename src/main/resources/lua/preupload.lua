@@ -1,28 +1,40 @@
-local temp = KEYS[1]
-local files = KEYS[2]
+local tempK = KEYS[1]
+-- uploading value key
+
+local filesK = KEYS[2]
+-- files hash map key
+
+local usedK = KEYS[3]
+-- used value key
 
 local size = tonumber(ARGV[1])
+-- file size
+
 local MD5 = ARGV[2]
-local used = tonumber(ARGV[3])
-local max = tonumber(ARGV[4])
+-- file MD5
 
-local uploading = 0;
+local max = tonumber(ARGV[3])
+-- user's max storage
 
-if redis.call("GET", temp) == true then
-    uploading = redis.call("GET",temp)
+local uploading = redis.call("GET",temp)
+
+if uploading == false then
+    uploading = 0
 end
+
+local used = redis.call("GET",usedK);
 
 if(redis.call("HEXISTS",files,MD5) == 1) then
     return 2
 end
 
-used = used + uploading + size
+local total = uploading + used + size;
 
-if(used > max) then
+if(total > max) then
     return 1
 end
 
-redis.call("SET",temp,used)
+redis.call("SET",temp,uploading + size)
 
 redis.call("HSET",files,MD5,size)
 

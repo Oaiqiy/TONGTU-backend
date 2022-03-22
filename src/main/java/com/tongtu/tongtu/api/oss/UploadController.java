@@ -51,15 +51,17 @@ public class UploadController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
 
-
-
         List<String> keys = new ArrayList<>(2);
         String username = user.getUsername();
+
         keys.add(username+":temp");
         keys.add(username+":" + id + ":files");
+        String used = username+":used";
+        keys.add(used);
+        if(redisTemplate.opsForValue().get(used)==null)
+            redisTemplate.opsForValue().set(used,user.getUsedStorage().toString());
 
-        Long code = redisTemplate.execute(script,keys,size.toString(),MD5,user.getUsedStorage().toString(),user.getMaxStorage().toString());
-
+        Long code = redisTemplate.execute(script,keys,size.toString(),MD5,user.getMaxStorage().toString());
 
 
         if(code == null)

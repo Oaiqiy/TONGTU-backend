@@ -125,7 +125,7 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
     @Modifying
     @Transactional
     @Query(value = "update FileInfo set folder = ?1 where id = ?2 and user.id = ?3")
-    void updateFolderByID(String folder,Long id,Long userId);
+    void updateFolderById(String folder, Long id, Long userId);
 
 
     //DELETE
