@@ -16,7 +16,7 @@ local MD5 = ARGV[2]
 local max = tonumber(ARGV[3])
 -- user's max storage
 
-local uploading = redis.call("GET",temp)
+local uploading = redis.call("GET",tempK)
 
 if uploading == false then
     uploading = 0
@@ -24,7 +24,7 @@ end
 
 local used = redis.call("GET",usedK);
 
-if(redis.call("HEXISTS",files,MD5) == 1) then
+if(redis.call("HEXISTS",filesK,MD5) == 1) then
     return 2
 end
 
@@ -34,8 +34,8 @@ if(total > max) then
     return 1
 end
 
-redis.call("SET",temp,uploading + size)
+redis.call("SET",tempK,uploading + size)
 
-redis.call("HSET",files,MD5,size)
+redis.call("HSET",filesK,MD5,size)
 
 return 0

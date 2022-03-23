@@ -19,6 +19,11 @@ import java.util.List;
 public class SearchController {
     private final SearchSession searchSession;
 
+    /**
+     * full text search
+     * @param name fuzzy name
+     * @return a list of file infos, list's size max 100
+     */
     @GetMapping("/file")
     public ResultInfo<List<FileInfo>> searchFileByName(String name){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();

@@ -14,12 +14,22 @@ import javax.persistence.EntityManagerFactory;
 @Component
 public class SearchConfig {
 
+    /**
+     * create a SearchSession bean
+     * @param entityManagerFactory bean
+     * @return search session
+     */
     @Bean
     public SearchSession searchSession(EntityManagerFactory entityManagerFactory){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         return Search.session(entityManager);
     }
 
+    /**
+     * create a MassIndexer associated by FileInfo
+     * @param entityManagerFactory bean
+     * @return MassIndexer
+     */
     @Bean
     public MassIndexer massIndexer(EntityManagerFactory entityManagerFactory){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
