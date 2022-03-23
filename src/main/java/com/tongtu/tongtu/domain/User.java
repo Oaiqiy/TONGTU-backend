@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tongtu.tongtu.api.oss.CallbackController;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.NumericField;
+import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +28,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericField
     private Long id;
 
     @Column(unique = true)

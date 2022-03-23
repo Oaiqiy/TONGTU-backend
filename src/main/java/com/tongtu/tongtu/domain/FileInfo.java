@@ -3,8 +3,8 @@ package com.tongtu.tongtu.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,7 +21,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor(force = true)
 @Table(name = "file_info")
-@Indexed(index = "idx_file")
+@Indexed(index = "idx_file_test")
 public class FileInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,11 @@ public class FileInfo implements Serializable {
 
     @ManyToOne(targetEntity = User.class)
     @JsonIgnore
+    @IndexedEmbedded
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     private User user;
+
+
 
     @ManyToOne(cascade = CascadeType.DETACH)
     private Device device;
@@ -70,8 +74,6 @@ public class FileInfo implements Serializable {
     public enum FileType{
         IMAGE,VIDEO,AUDIO,TEXT,OTHER
     }
-
-
 
 
 }

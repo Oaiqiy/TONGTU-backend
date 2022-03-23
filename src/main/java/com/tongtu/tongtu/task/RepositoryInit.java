@@ -18,9 +18,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 
 
@@ -31,12 +28,11 @@ import javax.transaction.Transactional;
 @Slf4j
 @Component
 public class RepositoryInit {
-    @Value("${spring.jpa.hibernate.ddl-auto}")
-    String ddl;
+
 
     @Bean
     @Transactional
-    public CommandLineRunner init(EntityManager entityManager,FileInfoRepository fileInfoRepository, UserRepository userRepository, DeviceRepository deviceRepository, PasswordEncoder passwordEncoder){
+    public CommandLineRunner init(MassIndexer indexer,FileInfoRepository fileInfoRepository, UserRepository userRepository, DeviceRepository deviceRepository, PasswordEncoder passwordEncoder){
         return args -> {
 
 
@@ -55,10 +51,10 @@ public class RepositoryInit {
 
             Device device = new Device();
             device.setUser(new User(1L));
-            device.setName("HUAWEI P30");
+            device.setName("Redmi K50 8+256G 2k 120w 2599");
             device.setType("phone");
             device.setUuid("mhl222sb");
-            device.setAlias("mhl的红米开");
+            device.setAlias("mhl的红米开五菱");
             deviceRepository.save(device);
 
             device = new Device();
@@ -75,7 +71,7 @@ public class RepositoryInit {
             fileInfo = new FileInfo("file-two","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
-            fileInfo = new FileInfo("agoodfile","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
+            fileInfo = new FileInfo("a good file","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
             fileInfoRepository.save(fileInfo);
 
             fileInfo = new FileInfo("file4","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file");
@@ -88,22 +84,26 @@ public class RepositoryInit {
             fileInfoRepository.save(new FileInfo("四个文件","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file"));
 
 
-            var em = entityManager.getEntityManagerFactory().createEntityManager();
-            SearchSession searchSession = Search.session(em);
-
-            MassIndexer indexer = searchSession.massIndexer(FileInfo.class).threadsToLoadObjects(4);
-            System.out.println("start");
+            indexer.purgeAllOnStart(true);
             indexer.startAndWait();
-            System.out.println("end");
 
-            SearchResult<FileInfo> result = searchSession.search(FileInfo.class)
-                .where(f ->f.match().fields("name").matching("*file*")).fetch(2);
-
-            for(var x: result.hits()){
-                System.out.println(x.getName());
-            }
-
-            System.out.println("finish");
+//            var em = entityManager.getEntityManagerFactory().createEntityManager();
+//            SearchSession searchSession = Search.session(em);
+//
+//            MassIndexer indexer = searchSession.massIndexer(FileInfo.class).threadsToLoadObjects(4);
+//            System.out.println("start");
+//            indexer.startAndWait();
+//
+//            System.out.println("end");
+//            fileInfoRepository.save(new FileInfo("五个文件","test",2048L, FileInfo.FileType.IMAGE,mhl,device,"test file"));
+//            SearchResult<FileInfo> result = searchSession.search(FileInfo.class)
+//                .where(f ->f.match().fields("name").matching("*文件*")).fetch(20);
+//
+//            for(var x: result.hits()){
+//                System.out.println(x.getName());
+//            }
+//
+//            System.out.println("finish");
 
 
         };
