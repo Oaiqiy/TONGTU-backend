@@ -72,7 +72,6 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
     List<String> findFoldersByUser_Id(Long id);
 
 
-
     /**
      * find file infos by user's id and if deleted and folder
      * @param id user's id
@@ -83,6 +82,15 @@ public interface FileInfoRepository extends CrudRepository<FileInfo,Long> {
      */
     Page<FileInfo> findFileInfosByUser_IdAndDeletedAndFolder(Long id,Boolean deleted,String folder,Pageable pageable);
 
+    /**
+     * find file infos by user's id and if deleted and file type
+     * @param id id
+     * @param deleted if deleted
+     * @param fileType file type
+     * @param pageable pageable
+     * @return a page of file infos
+     */
+    Page<FileInfo> findFileInfosByUser_IdAndDeletedAndFileType(Long id,Boolean deleted,FileInfo.FileType fileType,Pageable pageable);
 
     //UPDATE
 

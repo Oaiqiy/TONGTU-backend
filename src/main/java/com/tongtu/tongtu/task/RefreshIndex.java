@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class RefreshIndex {
     private MassIndexer indexer;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void refresh(){
 
         try {

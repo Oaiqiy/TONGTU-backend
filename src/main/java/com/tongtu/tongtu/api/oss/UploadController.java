@@ -41,7 +41,6 @@ public class UploadController {
      * @return if code equals 0,success. else error
      */
 
-
     @GetMapping("/upload")
     @Transactional
     public ResultInfo<Object> preUpload(Long size,String MD5,Long id){

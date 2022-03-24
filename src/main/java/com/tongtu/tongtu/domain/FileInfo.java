@@ -30,6 +30,7 @@ public class FileInfo implements Serializable {
     @FullTextField
     private String name;
     private Date uploadAt;
+    @GenericField
     private FileType fileType;
     private Long size;
 

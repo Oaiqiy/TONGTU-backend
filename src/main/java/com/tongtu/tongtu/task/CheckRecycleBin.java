@@ -22,7 +22,7 @@ public class CheckRecycleBin {
     /**
      * according to cron time to delete expired recycled file
      */
-    @Scheduled(cron = "* 0 * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void deleteExpired(){
 
         Calendar calendar = Calendar.getInstance();

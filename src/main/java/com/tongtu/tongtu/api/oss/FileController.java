@@ -119,6 +119,26 @@ public class FileController {
         }
     }
 
+
+    /**
+     * 分页，分组，分类型获取文件信息 (token)
+     * @param type file type
+     * @param size page size
+     * @param page page
+     * @return a list of file infos, if exist
+     */
+
+    @GetMapping("list/type")
+    public ResultInfo<List<FileInfo>> getFilesByType(String type,Integer size, Integer page){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        Pageable pageable = PageRequest.of(page,size);
+        Page<FileInfo> files = fileInfoRepository.findFileInfosByUser_IdAndDeletedAndFileType(user.getId(),false,FileInfo.FileType.valueOf(type),pageable);
+        if(files.isEmpty())
+            return new ResultInfo<>(1,"no files");
+        else
+            return new ResultInfo<>(0,"success",files.toList());
+    }
+
     /**
      * 删除文件 (token)
      * @param device_id device id
