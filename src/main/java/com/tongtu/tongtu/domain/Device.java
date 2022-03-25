@@ -3,6 +3,7 @@ package com.tongtu.tongtu.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,10 +19,16 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JsonIgnore
+    @Column(unique = true)
     private String uuid;
+
     private String name;
     private String alias;
+
+
     private String type;
+
+    private String registrationId;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JsonIgnore
@@ -46,12 +53,15 @@ public class Device {
         this.id = id;
     }
 
-    public Device(String uuid,String name,String type,User user){
+    public Device(String uuid,String name,String type,User user,String registrationId){
         this.uuid = uuid;
         this.name = name;
         this.type = type;
         this.user = user;
+        this.registrationId = registrationId;
     }
+
+
 
 
 }

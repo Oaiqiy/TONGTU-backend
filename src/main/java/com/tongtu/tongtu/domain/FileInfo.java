@@ -21,7 +21,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor(force = true)
 @Table(name = "file_info")
-@Indexed(index = "idx_file")
+@Indexed(index = "idx_files")
 public class FileInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

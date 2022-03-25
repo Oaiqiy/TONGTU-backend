@@ -34,9 +34,12 @@ public class DeviceController {
         if (uuid==null){
             return new ResultInfo<>(1,"empty uuid");
         }
+
         String name = deviceInfo.get("name");
         String type = deviceInfo.get("type");
-        Device device = new Device(uuid,name,type, (User) SecurityContextHolder.getContext().getAuthentication().getDetails());
+        String registration = deviceInfo.get("registrationId");
+
+        Device device = new Device(uuid,name,type, (User) SecurityContextHolder.getContext().getAuthentication().getDetails(),registration);
         device.setLastLoginAt(new Date());
         device = deviceRepository.save(device);
         return new ResultInfo<>(0,"success",device.getId().toString());

@@ -1,0 +1,11 @@
+{
+  "properties": [{
+    "name": "tongtu.oss.access-key-id",
+    "type": "java.lang.String",
+    "description": "Aliyun access-key-id."
+  },{
+    "name": "access-key-secret",
+    "type": "java.lang.String",
+    "description": "Aliyun access-key-secret."
+  }]
+}
